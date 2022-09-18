@@ -17,20 +17,21 @@ DenotativeObject subclass: #CombatienteOrcoMankrik
 
 !classDefinition: 'CombatienteOrcoMankrik class' category: 'AtaquesFantasticosPaso2'!
 CombatienteOrcoMankrik class
-	instanceVariableNames: 'fuerza enemigos puntosDeVida dañoAInfligir dañoAAbsorber estrategia agilidad'!
+	instanceVariableNames: 'fuerza enemigos puntosDeVida dañoAInfligir dañoAAbsorber estrategia agilidad consciente distraido'!
 
-!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'pal 8/23/2022 23:51:54'!
+!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'MN 9/18/2022 17:06:57'!
 atacar
 	| enemigoElegido |
 	enemigos isEmpty ifTrue: [^self].
+	enemigos := (enemigos  reject:[:enemigo | enemigo estaFueraDeCombate]).
 	enemigoElegido := estrategia value.
 	self atacarA: enemigoElegido.! !
 
-!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'EP 9/16/2022 18:41:07'!
+!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'MN 9/18/2022 16:49:02'!
 atacarA: unCombatiente 
 	|danio|
 	danio := (dañoAInfligir+fuerza).
-	unCombatiente recibirDaño: danio.! !
+	(consciente = True) ifTrue:[unCombatiente recibirDaño: danio].! !
 
 !CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'pal 8/23/2022 23:51:54'!
 enemigos: unConjuntoDeEnemigos
@@ -44,7 +45,7 @@ focalizarEnElMasHerido
 focalizarEnElMasSano
 	estrategia := [enemigos detectMax: [:enemigo | enemigo puntosDeVida]].! !
 
-!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'EP 9/16/2022 18:54:21'!
+!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'MN 9/18/2022 17:09:37'!
 prepararseParaElCombate
 	puntosDeVida := 20.
 	dañoAInfligir := 2.
@@ -52,17 +53,21 @@ prepararseParaElCombate
 	enemigos := #().
 	fuerza := 2.
 	agilidad := 0.
+	consciente := True.
+	distraido := False.
 	estrategia := [enemigos anyOne ].! !
 
 !CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'EP 9/16/2022 18:19:27'!
 puntosDeVida
 	^ puntosDeVida * pv.! !
 
-!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'pal 8/23/2022 23:51:54'!
+!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'MN 9/18/2022 17:30:40'!
 recibirDaño:  unaCantidadDeDaño
 	| dañoADescontar |
-	dañoADescontar := (unaCantidadDeDaño - dañoAAbsorber) max: 0.
-	puntosDeVida := puntosDeVida - dañoADescontar.! !
+	dañoADescontar := (unaCantidadDeDaño - dañoAAbsorber-agilidad) max: 0.
+	(dañoADescontar = 0) ifTrue:[distraido := True] ifFalse:[(distraido = True)ifTrue:[dañoADescontar := dañoADescontar + 2]].
+	puntosDeVida := puntosDeVida - dañoADescontar.
+	(puntosDeVida > 0) ifFalse:[consciente := False].! !
 
 
 !CombatienteOrcoMankrik class methodsFor: 'equipo' stamp: 'pal 8/23/2022 23:51:54'!
@@ -82,6 +87,10 @@ usarHacha
 	dañoAInfligir := 10.! !
 
 
+!CombatienteOrcoMankrik class methodsFor: 'as yet unclassified' stamp: 'MN 9/18/2022 17:03:08'!
+estaFueraDeCombate
+	^(consciente = False).! !
+
 !CombatienteOrcoMankrik class methodsFor: 'as yet unclassified' stamp: 'EP 9/16/2022 18:44:50'!
 estaHerido
 	^(puntosDeVida ~= 20).! !
@@ -95,7 +104,7 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/16/2022 19:30:39'!
+!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'MN 9/18/2022 17:38:34'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -104,10 +113,10 @@ initializeCollaboratorsFromFile
 	puntosDeVida := 20.
 	dañoAInfligir := 2.
 	dañoAAbsorber := 0.
-	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteOrcoMankrik; instVarAt: 2 put: '[
-	(theSelf instVarNamed: ''enemigos'') detectMin: [ :argm0_1 |
-		argm0_1 puntosDeVida ]. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
-	agilidad := 0.! !
+	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteOrcoMankrik; instVarAt: 2 put: '[ (theSelf instVarNamed: ''enemigos'') anyOne. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
+	agilidad := 0.
+	consciente := True.
+	distraido := False.! !
 
 
 !classDefinition: #CombatienteHumanoArthas category: 'AtaquesFantasticosPaso2'!
@@ -121,20 +130,21 @@ CombatienteOrcoMankrik subclass: #CombatienteHumanoArthas
 
 !classDefinition: 'CombatienteHumanoArthas class' category: 'AtaquesFantasticosPaso2'!
 CombatienteHumanoArthas class
-	instanceVariableNames: 'fuerza enemigos puntosDeVida dañoAInfligir dañoAAbsorber estrategia agilidad'!
+	instanceVariableNames: ''!
 
-!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'pal 8/23/2022 14:10:19'!
+!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'MN 9/18/2022 17:07:03'!
 atacar
 	| enemigoElegido |
 	enemigos isEmpty ifTrue: [^self].
+	enemigos := (enemigos  reject:[:enemigo | enemigo estaFueraDeCombate]).
 	enemigoElegido := estrategia value.
 	self atacarA: enemigoElegido.! !
 
-!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'EP 9/16/2022 18:41:17'!
+!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'MN 9/18/2022 16:49:26'!
 atacarA: unCombatiente 
 	|danio|
 	danio := (dañoAInfligir+fuerza).
-	unCombatiente recibirDaño: danio.! !
+	(consciente = True) ifTrue:[unCombatiente recibirDaño: danio].! !
 
 !CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'pal 8/23/2022 12:59:21'!
 enemigos: unConjuntoDeEnemigos
@@ -148,13 +158,15 @@ focalizarEnElMasHerido
 focalizarEnElMasSano
 	estrategia := [enemigos detectMax: [:enemigo | enemigo puntosDeVida]].! !
 
-!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'EP 9/16/2022 18:55:04'!
+!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'MN 9/18/2022 17:10:06'!
 prepararseParaElCombate
 	puntosDeVida := 20.
 	dañoAInfligir := 2.
 	dañoAAbsorber := 0.
 	enemigos := #().
 	estrategia := [enemigos anyOne ].
+	consciente := True.
+	distraido := False.
 	fuerza := 0.
 	agilidad := 1.! !
 
@@ -162,11 +174,13 @@ prepararseParaElCombate
 puntosDeVida
 	^ puntosDeVida * pv.! !
 
-!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'EP 9/16/2022 18:55:15'!
+!CombatienteHumanoArthas class methodsFor: 'combate' stamp: 'MN 9/18/2022 17:30:45'!
 recibirDaño:  unaCantidadDeDaño
 	| dañoADescontar |
 	dañoADescontar := (unaCantidadDeDaño - dañoAAbsorber-agilidad) max: 0.
-	puntosDeVida := puntosDeVida - dañoADescontar.! !
+	(dañoADescontar = 0) ifTrue:[distraido := True] ifFalse:[(distraido = True)ifTrue:[dañoADescontar := dañoADescontar + 2]].
+	puntosDeVida := puntosDeVida - dañoADescontar.
+	(puntosDeVida > 0) ifFalse:[consciente := False].! !
 
 
 !CombatienteHumanoArthas class methodsFor: 'equipo' stamp: 'pal 8/23/2022 23:49:04'!
@@ -186,6 +200,10 @@ usarHacha
 	dañoAInfligir := 10.! !
 
 
+!CombatienteHumanoArthas class methodsFor: 'as yet unclassified' stamp: 'MN 9/18/2022 17:05:49'!
+estaFueraDeCombate
+	^(consciente = False).! !
+
 !CombatienteHumanoArthas class methodsFor: 'as yet unclassified' stamp: 'EP 9/16/2022 18:45:06'!
 estaHerido
 	^(puntosDeVida ~= 20).! !
@@ -199,24 +217,21 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/16/2022 19:30:39'!
+!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'MN 9/18/2022 17:38:34'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	fuerza := 0.
 	enemigos := #().
-	puntosDeVida := 18.
-	dañoAInfligir := 2.
-	dañoAAbsorber := 6.
-	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteHumanoArthas; instVarAt: 2 put: '[ (theSelf instVarNamed: ''enemigos'') anyOne. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
+	puntosDeVida := 20.
+	dañoAInfligir := 10.
+	dañoAAbsorber := 0.
+	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteHumanoArthas; instVarAt: 2 put: '[
+	(theSelf instVarNamed: ''enemigos'') detectMin: [ :argm0_1 |
+		argm0_1 puntosDeVida ]. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
 	agilidad := 1.
-	fuerza := 0.
-	enemigos := #().
-	puntosDeVida := 18.
-	dañoAInfligir := 2.
-	dañoAAbsorber := 6.
-	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteHumanoArthas; instVarAt: 2 put: '[ (theSelf instVarNamed: ''enemigos'') anyOne. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
-	agilidad := 1.! !
+	consciente := True.
+	distraido := False.! !
 
 
 !classDefinition: #CombatienteOrcoOlgra category: 'AtaquesFantasticosPaso2'!
@@ -230,20 +245,21 @@ CombatienteOrcoMankrik subclass: #CombatienteOrcoOlgra
 
 !classDefinition: 'CombatienteOrcoOlgra class' category: 'AtaquesFantasticosPaso2'!
 CombatienteOrcoOlgra class
-	instanceVariableNames: 'fuerza enemigos puntosDeVida dañoAInfligir dañoAAbsorber estrategia agilidad'!
+	instanceVariableNames: ''!
 
-!CombatienteOrcoOlgra class methodsFor: 'combate' stamp: 'pal 8/23/2022 23:50:14'!
+!CombatienteOrcoOlgra class methodsFor: 'combate' stamp: 'MN 9/18/2022 17:07:06'!
 atacar
 	| enemigoElegido |
 	enemigos isEmpty ifTrue: [^self].
+	enemigos := (enemigos  reject:[:enemigo | enemigo estaFueraDeCombate]).
 	enemigoElegido := estrategia value.
 	self atacarA: enemigoElegido.! !
 
-!CombatienteOrcoOlgra class methodsFor: 'combate' stamp: 'EP 9/16/2022 18:40:34'!
+!CombatienteOrcoOlgra class methodsFor: 'combate' stamp: 'MN 9/18/2022 16:49:30'!
 atacarA: unCombatiente 
 	|danio|
 	danio := (dañoAInfligir+fuerza).
-	unCombatiente recibirDaño: danio.! !
+	(consciente = True) ifTrue:[unCombatiente recibirDaño: danio].! !
 
 !CombatienteOrcoOlgra class methodsFor: 'combate' stamp: 'pal 8/23/2022 23:50:14'!
 enemigos: unConjuntoDeEnemigos
@@ -257,13 +273,15 @@ focalizarEnElMasHerido
 focalizarEnElMasSano
 	estrategia := [enemigos detectMax: [:enemigo | enemigo puntosDeVida]].! !
 
-!CombatienteOrcoOlgra class methodsFor: 'combate' stamp: 'EP 9/16/2022 18:54:06'!
+!CombatienteOrcoOlgra class methodsFor: 'combate' stamp: 'MN 9/18/2022 17:10:16'!
 prepararseParaElCombate
 	puntosDeVida := 20.
 	dañoAInfligir := 2.
 	dañoAAbsorber := 0.
 	enemigos := #().
 	estrategia := [enemigos anyOne ].
+	consciente := True.
+	distraido := False.
 	fuerza := 1.
 	agilidad := 0.! !
 
@@ -271,11 +289,13 @@ prepararseParaElCombate
 puntosDeVida
 	^ puntosDeVida * pv.! !
 
-!CombatienteOrcoOlgra class methodsFor: 'combate' stamp: 'EP 9/16/2022 18:43:10'!
+!CombatienteOrcoOlgra class methodsFor: 'combate' stamp: 'MN 9/18/2022 17:30:50'!
 recibirDaño:  unaCantidadDeDaño
 	| dañoADescontar |
 	dañoADescontar := (unaCantidadDeDaño - dañoAAbsorber-agilidad) max: 0.
-	puntosDeVida := puntosDeVida - dañoADescontar.! !
+	(dañoADescontar = 0) ifTrue:[distraido := True] ifFalse:[(distraido = True)ifTrue:[dañoADescontar := dañoADescontar + 2]].
+	puntosDeVida := puntosDeVida - dañoADescontar.
+	(puntosDeVida > 0) ifFalse:[consciente := False].! !
 
 
 !CombatienteOrcoOlgra class methodsFor: 'equipo' stamp: 'pal 8/23/2022 23:50:14'!
@@ -295,6 +315,10 @@ usarHacha
 	dañoAInfligir := 10.! !
 
 
+!CombatienteOrcoOlgra class methodsFor: 'as yet unclassified' stamp: 'MN 9/18/2022 17:05:52'!
+estaFueraDeCombate
+	^(consciente = False).! !
+
 !CombatienteOrcoOlgra class methodsFor: 'as yet unclassified' stamp: 'EP 9/16/2022 18:45:00'!
 estaHerido
 	^(puntosDeVida ~= 20).! !
@@ -308,24 +332,19 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/16/2022 19:30:39'!
+!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'MN 9/18/2022 17:38:34'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	fuerza := 1.
 	enemigos := #().
 	puntosDeVida := 20.
-	dañoAInfligir := 8.
+	dañoAInfligir := 2.
 	dañoAAbsorber := 0.
 	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteOrcoOlgra; instVarAt: 2 put: '[ (theSelf instVarNamed: ''enemigos'') anyOne. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
 	agilidad := 0.
-	fuerza := 1.
-	enemigos := #().
-	puntosDeVida := 20.
-	dañoAInfligir := 8.
-	dañoAAbsorber := 0.
-	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteOrcoOlgra; instVarAt: 2 put: '[ (theSelf instVarNamed: ''enemigos'') anyOne. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
-	agilidad := 0.! !
+	consciente := True.
+	distraido := False.! !
 
 
 !classDefinition: #CombatientesTest category: 'AtaquesFantasticosPaso2'!
@@ -352,6 +371,27 @@ initialize
 	Smalltalk at: #pv put: puntosDeVida.
 	Smalltalk at: #puntosDeVida put: puntosDeVida.! !
 
+
+!CombatientesTest class methodsFor: 'preparacion de combates' stamp: 'MN 9/18/2022 16:54:30'!
+arthasConHachaDejaFueraDeCombateAMankrik.
+	self combatienteHumanoArthas usarHacha.
+	self combatienteHumanoArthas atacarA: self combatienteOrcoMankrik.
+	self combatienteHumanoArthas atacarA: self combatienteOrcoMankrik.
+	self combatienteHumanoArthas atacarA: self combatienteOrcoMankrik.! !
+
+!CombatientesTest class methodsFor: 'preparacion de combates' stamp: 'MN 9/18/2022 16:57:00'!
+mankrikConHachaDejaFueraDeCombateAArthas
+	self combatienteOrcoMankrik usarHacha.
+	self combatienteOrcoMankrik atacarA: self combatienteHumanoArthas. 
+	self combatienteOrcoMankrik atacarA: self combatienteHumanoArthas. 
+	self combatienteOrcoMankrik atacarA: self combatienteHumanoArthas. ! !
+
+!CombatientesTest class methodsFor: 'preparacion de combates' stamp: 'MN 9/18/2022 16:55:19'!
+olgraConHachaDejaFueraDeCombateAMankrik.
+	self combatienteOrcoOlgra usarHacha.
+	self combatienteOrcoOlgra atacarA: self combatienteOrcoMankrik.
+	self combatienteOrcoOlgra atacarA: self combatienteOrcoMankrik.
+	self combatienteOrcoOlgra atacarA: self combatienteOrcoMankrik.! !
 
 
 !CombatientesTest class methodsFor: 'tests - combatientes' stamp: 'JMB 9/14/2022 00:20:06'!
@@ -733,127 +773,6 @@ comenzarUnNuevoCombate
 	CombatienteOrcoOlgra prepararseParaElCombate .
 	CombatienteOrcoMankrik prepararseParaElCombate .! !
 
-
-!CombatientesTest class methodsFor: 'atacar tests' stamp: 'pal 8/25/2022 00:54:34'!
-test01CuandoUnCombatienteNoTieneEnemigosNoAtacaANadie
-	self comenzarUnNuevoCombate .
-	
-	self combatienteHumanoArthas atacar.
-	
-	self assert: (20 = self combatienteOrcoOlgra puntosDeVida and:[20 = self combatienteOrcoMankrik puntosDeVida ]).
-	
-	! !
-
-!CombatientesTest class methodsFor: 'atacar tests' stamp: 'pal 8/25/2022 00:54:34'!
-test02CuandoUnCombatienteTieneEnemigosAtacaAUno
-	| enemigo1Herido enemigo2Herido |
-	self comenzarUnNuevoCombate .
-	self combatienteHumanoArthas enemigos: {self combatienteOrcoOlgra . self combatienteOrcoMankrik .}.
-	
-	self combatienteHumanoArthas atacar.
-	
-	enemigo1Herido := self combatienteOrcoOlgra puntosDeVida < 20 and: [self combatienteOrcoMankrik puntosDeVida = 20].
-	enemigo2Herido := self combatienteOrcoMankrik puntosDeVida < 20 and: [self combatienteOrcoOlgra puntosDeVida = 20].
-	self assert: (enemigo1Herido or: [enemigo2Herido]).! !
-
-!CombatientesTest class methodsFor: 'atacar tests' stamp: 'pal 8/25/2022 00:54:34'!
-test03UnCombatientePuedeTenerComoEstrategiaAtacarAlMasHerido
-	| enemigo2HeridoDosVeces |
-	self comenzarUnNuevoCombate .
-	self combatienteHumanoArthas enemigos: {self combatienteOrcoOlgra . self combatienteOrcoMankrik .}.
-	self combatienteHumanoArthas atacarA: self combatienteOrcoOlgra .
-	
-	self combatienteHumanoArthas focalizarEnElMasHerido.
-	self combatienteHumanoArthas atacar.
-	
-	enemigo2HeridoDosVeces := self combatienteOrcoOlgra puntosDeVida = 16.
-	self assert: enemigo2HeridoDosVeces.
-	! !
-
-!CombatientesTest class methodsFor: 'atacar tests' stamp: 'pal 8/25/2022 00:54:34'!
-test04UnCombatientePuedeTenerComoEstrategiaAtacarAlMasSano
-	| enemigo1Herido |
-	self comenzarUnNuevoCombate .
-	
-	self combatienteHumanoArthas usarEspada .
-	self combatienteHumanoArthas enemigos: {self combatienteOrcoOlgra . self combatienteOrcoMankrik .}.
-	self combatienteHumanoArthas atacarA: self combatienteOrcoMankrik .
-	
-	self combatienteHumanoArthas focalizarEnElMasSano.
-	self combatienteHumanoArthas atacar.
-	
-	enemigo1Herido := self combatienteOrcoOlgra puntosDeVida = 12.
-	self assert: enemigo1Herido .
-	! !
-
-
-!CombatientesTest class methodsFor: 'combatientes tests' stamp: 'pal 8/25/2022 00:54:12'!
-test01UnCombatientePuedeAtacarAOtro
-	
-	self comenzarUnNuevoCombate.
-	self combatienteHumanoArthas atacarA: self combatienteOrcoOlgra.
-	
-	self assert: 18 equals: self combatienteOrcoOlgra puntosDeVida.! !
-
-!CombatientesTest class methodsFor: 'combatientes tests' stamp: 'pal 8/25/2022 00:54:12'!
-test02MultiplesAtaquesVanBajandoMasVida
-
-	self comenzarUnNuevoCombate .
-	self combatienteHumanoArthas atacarA: self combatienteOrcoOlgra .
-	self combatienteHumanoArthas atacarA: self combatienteOrcoOlgra .
-	
-	self assert: 16 equals: self combatienteOrcoOlgra puntosDeVida.! !
-
-!CombatientesTest class methodsFor: 'combatientes tests' stamp: 'pal 8/25/2022 00:54:12'!
-test03UnHachaHace10DeDaño
-
-	self comenzarUnNuevoCombate .
-	self combatienteHumanoArthas usarHacha.
-	self combatienteHumanoArthas atacarA: self combatienteOrcoOlgra .
-	
-	self assert: 10 equals: self combatienteOrcoOlgra puntosDeVida.! !
-
-!CombatientesTest class methodsFor: 'combatientes tests' stamp: 'pal 8/25/2022 00:54:12'!
-test04UnEspadaHace8DeDaño
-
-	self comenzarUnNuevoCombate .
-	self combatienteHumanoArthas usarEspada.
-	self combatienteHumanoArthas atacarA: self combatienteOrcoOlgra .
-	
-	self assert: 12 equals: self combatienteOrcoOlgra puntosDeVida.! !
-
-!CombatientesTest class methodsFor: 'combatientes tests' stamp: 'pal 8/25/2022 00:54:12'!
-test05UnaArmaduraDeCueroAbsorbe2DeDaño
-
-	self comenzarUnNuevoCombate .
-	self combatienteHumanoArthas usarEspada.
-	self combatienteOrcoOlgra usarArmaduraDeCuero.
-	
-	self combatienteHumanoArthas atacarA: self combatienteOrcoOlgra .
-	
-	self assert: 14 equals: self combatienteOrcoOlgra puntosDeVida.! !
-
-!CombatientesTest class methodsFor: 'combatientes tests' stamp: 'pal 8/25/2022 00:54:12'!
-test06UnaArmaduraDeMetalAbsorbe6DeDaño
-
-	self comenzarUnNuevoCombate .
-	self combatienteHumanoArthas usarEspada.
-	self combatienteOrcoOlgra usarArmaduraDeMetal.
-	
-	self combatienteHumanoArthas atacarA: self combatienteOrcoOlgra .
-	
-	self assert: 18 equals: self combatienteOrcoOlgra puntosDeVida.! !
-
-!CombatientesTest class methodsFor: 'combatientes tests' stamp: 'pal 8/25/2022 00:54:12'!
-test07UnaArmaduraReduceElDañoInfligidoACero
-
-	self comenzarUnNuevoCombate .
-	self combatienteOrcoOlgra usarArmaduraDeMetal.
-	
-	self combatienteHumanoArthas atacarA: self combatienteOrcoOlgra .
-	
-	self assert: 20 equals: self combatienteOrcoOlgra puntosDeVida.! !
-
 
 !classDefinition: #EstrategiasTest category: 'AtaquesFantasticosPaso2'!
 DenotativeObject subclass: #EstrategiasTest
@@ -1198,12 +1117,12 @@ desarrollarDuranteRondas: unNumero
 ! !
 
 
-!OrquestadorDeCombatesTest class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/16/2022 19:30:39'!
+!OrquestadorDeCombatesTest class methodsFor: '--** private fileout/in **--' stamp: 'MN 9/18/2022 17:38:34'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	bando1 := nil.
-	bando2 := nil.! !
+	bando1 := ((Array new: 1) at: 1 put: CombatienteHumanoArthas; yourself).
+	bando2 := ((Array new: 2) at: 1 put: CombatienteOrcoOlgra; at: 2 put: CombatienteOrcoMankrik; yourself).! !
 
 CombatienteOrcoMankrik initializeAfterFileIn!
 CombatienteHumanoArthas initializeAfterFileIn!
