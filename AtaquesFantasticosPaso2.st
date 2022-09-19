@@ -15,13 +15,13 @@ Bando1 class
 asignarCombatientes: unosCombatientes
 	combatientes := unosCombatientes.! !
 
-!Bando1 class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 20:52:46'!
+!Bando1 class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 21:09:46'!
 asignarEnemigos: unosEnemigos
-	combatientes do:[:combatiente | combatiente enemigos: unosEnemigos].! !
+	combatientes do: [:combatiente | combatiente enemigos: unosEnemigos].! !
 
-!Bando1 class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 20:43:29'!
+!Bando1 class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 21:06:02'!
 atacar
-	combatientes do: [:combatiente | combatiente atacar ]! !
+	combatientes do: [:combatiente | combatiente atacar].! !
 
 !Bando1 class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 19:53:08'!
 todosNoqueados
@@ -30,7 +30,7 @@ todosNoqueados
 	^(combatientesConscientes isEmpty).! !
 
 
-!Bando1 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:00:23'!
+!Bando1 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:38'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -50,7 +50,7 @@ Bando1 subclass: #Bando2
 Bando2 class
 	instanceVariableNames: ''!
 
-!Bando2 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:00:23'!
+!Bando2 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:38'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -163,7 +163,7 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:00:23'!
+!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:39'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -276,7 +276,7 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:00:23'!
+!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:39'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -389,7 +389,7 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:00:23'!
+!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:39'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -954,7 +954,7 @@ todosAtacan
 	self bando2 atacar.! !
 
 
-!OrquestadorDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:00:23'!
+!OrquestadorDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:39'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -1197,7 +1197,7 @@ test10AlDesarrollarUnCombateLosDelBando2PuedenAtacarACualquieraDelBando1
 !OrquestadorDeCombatesTest class methodsFor: 'tests - muches vs muches' stamp: 'JMB 9/15/2022 00:30:51'!
 test11AlDesarrollarUnCombateAtacanTodesLosDelBando2EnCadaRonda
 	"
-		En cada ronda Olgra da�a a Arthas en 2  (2 pu�os + 1 por fuerza - 1 por agilidad de Arthas) y  Mankrik 3 (2 pu�os + 2 por fuerza - 1 por agilidad de Arthas) 
+		En cada ronda Olgra daña a Arthas en 2  (2 puños + 1 por fuerza - 1 por agilidad de Arthas) y  Mankrik 3 (2 puños + 2 por fuerza - 1 por agilidad de Arthas) 
 	"
 	| orquestadorDeCombates resultado |
 	orquestadorDeCombates := self orquestadorParaCombateArthasVsOrcos.
