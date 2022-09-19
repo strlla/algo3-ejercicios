@@ -23,14 +23,12 @@ asignarEnemigos: unosEnemigos
 atacar
 	combatientes do: [:combatiente | combatiente atacar].! !
 
-!Bando1 class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 19:53:08'!
+!Bando1 class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 23:38:37'!
 todosNoqueados
-	| combatientesConscientes | 
-	combatientesConscientes := combatientes reject: [:combatiente | combatiente estaFueraDeCombate].
-	^(combatientesConscientes isEmpty).! !
+	^ combatientes allSatisfy: [:combatiente | combatiente estaFueraDeCombate].! !
 
 
-!Bando1 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 22:47:55'!
+!Bando1 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -50,11 +48,11 @@ Bando1 subclass: #Bando2
 Bando2 class
 	instanceVariableNames: ''!
 
-!Bando2 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 22:47:56'!
+!Bando2 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	combatientes := ((Array new: 1) at: 1 put: CombatienteOrcoOlgra; yourself).! !
+	combatientes := ((Array new: 2) at: 1 put: CombatienteOrcoOlgra; at: 2 put: CombatienteOrcoMankrik; yourself).! !
 
 
 !classDefinition: #Combate category: 'AtaquesFantasticosPaso2'!
@@ -104,7 +102,7 @@ focalizarEnElMasHerido
 focalizarEnElMasSano
 	estrategia := [enemigos detectMax: [:enemigo | enemigo puntosDeVida]].! !
 
-!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'EP 9/18/2022 22:29:17'!
+!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'EP 9/19/2022 00:06:34'!
 prepararseParaElCombate
 	puntosDeVida := 20.
 	dañoAInfligir := 2.
@@ -120,7 +118,7 @@ prepararseParaElCombate
 puntosDeVida
 	^ puntosDeVida * pv.! !
 
-!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'EP 9/18/2022 22:29:26'!
+!CombatienteOrcoMankrik class methodsFor: 'combate' stamp: 'EP 9/19/2022 00:06:25'!
 recibirDaño:  unaCantidadDeDaño
 	| dañoADescontar |
 	dañoADescontar := (unaCantidadDeDaño - dañoAAbsorber-agilidad) max: 0.
@@ -163,7 +161,7 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 22:47:56'!
+!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -171,11 +169,11 @@ initializeCollaboratorsFromFile
 	enemigos := #().
 	puntosDeVida := 20.
 	dañoAInfligir := 2.
-	dañoAAbsorber := 0.
+	dañoAAbsorber := 2.
 	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteOrcoMankrik; instVarAt: 2 put: '[ (theSelf instVarNamed: ''enemigos'') anyOne. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
 	agilidad := 0.
 	consciente := True.
-	distraido := False.! !
+	distraido := True.! !
 
 
 !classDefinition: #CombatienteHumanoArthas category: 'AtaquesFantasticosPaso2'!
@@ -276,12 +274,12 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 22:47:56'!
+!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	fuerza := 0.
-	enemigos := ((Array new: 1) at: 1 put: CombatienteOrcoOlgra; yourself).
+	enemigos := #().
 	puntosDeVida := 20.
 	dañoAInfligir := 2.
 	dañoAAbsorber := 0.
@@ -389,12 +387,12 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 22:47:56'!
+!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	fuerza := 1.
-	enemigos := ((Array new: 1) at: 1 put: CombatienteHumanoArthas; yourself).
+	enemigos := #().
 	puntosDeVida := 20.
 	dañoAInfligir := 2.
 	dañoAAbsorber := 0.
@@ -920,10 +918,12 @@ bando1
 bando2
 	^Bando2! !
 
-!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 22:26:06'!
+!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/19/2022 00:01:04'!
 desarrollarDuranteRondas: unNumero
 	rondasAlcanzadas := 0.
-	[rondasAlcanzadas < unNumero and: (self hayGanador = False)] whileTrue: [self todosAtacan. rondasAlcanzadas := rondasAlcanzadas + 1].! !
+	[rondasAlcanzadas < unNumero & (self hayGanador = false)] whileTrue: [
+		self todosAtacan. 
+		rondasAlcanzadas := rondasAlcanzadas + 1. ].! !
 
 !OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 20:50:56'!
 establecerCombateEntreBando1: unEquipo1 contraBando2: unEquipo2
@@ -933,14 +933,18 @@ establecerCombateEntreBando1: unEquipo1 contraBando2: unEquipo2
 	self bando2 asignarCombatientes: unEquipo2.
 	self bando2 asignarEnemigos: unEquipo1.! !
 
-!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 20:14:03'!
+!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 23:52:12'!
 hayGanador
-	^(self bando1 todosNoqueados = True) or: (self bando2 todosNoqueados = True).! !
+	self obtenerGanador.
+	^(ganador ~= 'indeterminado').! !
 
-!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 20:28:59'!
+!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/19/2022 00:03:22'!
 obtenerGanador
-	 (self bando1 todosNoqueados and: self bando2 todosNoqueados = False) ifTrue: [ganador := 1].
-	 (self bando2 todosNoqueados and: self bando1 todosNoqueados = False) ifTrue: [ganador := 2].
+	ganador := 'indeterminado'.
+	 
+	self bando1 todosNoqueados ifTrue: [self bando2 todosNoqueados ifFalse: [ganador := 2]].
+	self bando2 todosNoqueados ifTrue: [self bando1 todosNoqueados ifFalse: [ganador := 1]].
+
 	^ganador.
 	 ! !
 
@@ -948,18 +952,18 @@ obtenerGanador
 obtenerRondasAlcanzadas
 	^rondasAlcanzadas.! !
 
-!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 20:48:28'!
+!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/18/2022 22:55:17'!
 todosAtacan
 	self bando1 atacar.
 	self bando2 atacar.! !
 
 
-!OrquestadorDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 22:47:56'!
+!OrquestadorDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	ganador := nil.
-	rondasAlcanzadas := 0.! !
+	ganador := 1.
+	rondasAlcanzadas := 4.! !
 
 
 !classDefinition: #OrquestadorDeCombatesTest category: 'AtaquesFantasticosPaso2'!
@@ -985,9 +989,9 @@ assertElResultadoIndicaQueGanoElBando2: resultadoDeUnCombate alcanzadaLaRonda: u
 Assert isTrue: (resultadoDeUnCombate obtenerGanador = 2 and: resultadoDeUnCombate obtenerRondasAlcanzadas = unNumeroDeRondaEsperado)
 	description: 'El ganador deberia ser bando2.'! !
 
-!OrquestadorDeCombatesTest class methodsFor: 'para completar' stamp: 'EP 9/18/2022 20:38:10'!
+!OrquestadorDeCombatesTest class methodsFor: 'para completar' stamp: 'EP 9/19/2022 00:02:43'!
 assertElResultadoIndicaQueNoHayGanador: resultadoDeUnCombate  alcanzadaLaRonda: unNumeroDeRondaEsperado
-Assert isTrue: (resultadoDeUnCombate hayGanador = False)
+Assert isTrue: (resultadoDeUnCombate hayGanador = false)
 	description: 'No deberia haber ganador.'! !
 
 !OrquestadorDeCombatesTest class methodsFor: 'para completar' stamp: 'EP 9/18/2022 20:57:25'!
