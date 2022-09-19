@@ -28,11 +28,11 @@ todosNoqueados
 	^ combatientes allSatisfy: [:combatiente | combatiente estaFueraDeCombate].! !
 
 
-!Bando1 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
+!Bando1 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:08:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	combatientes := ((Array new: 1) at: 1 put: CombatienteHumanoArthas; yourself).! !
+	combatientes := ((Array new: 2) at: 1 put: CombatienteOrcoOlgra; at: 2 put: CombatienteOrcoMankrik; yourself).! !
 
 
 !classDefinition: #Bando2 category: 'AtaquesFantasticosPaso2'!
@@ -48,11 +48,11 @@ Bando1 subclass: #Bando2
 Bando2 class
 	instanceVariableNames: ''!
 
-!Bando2 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
+!Bando2 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:08:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	combatientes := ((Array new: 2) at: 1 put: CombatienteOrcoOlgra; at: 2 put: CombatienteOrcoMankrik; yourself).! !
+	combatientes := ((Array new: 1) at: 1 put: CombatienteHumanoArthas; yourself).! !
 
 
 !classDefinition: #Combate category: 'AtaquesFantasticosPaso2'!
@@ -161,19 +161,19 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
+!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:08:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	fuerza := 2.
-	enemigos := #().
-	puntosDeVida := 20.
+	enemigos := ((Array new: 1) at: 1 put: CombatienteHumanoArthas; yourself).
+	puntosDeVida := 18.
 	dañoAInfligir := 2.
-	dañoAAbsorber := 2.
+	dañoAAbsorber := 0.
 	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteOrcoMankrik; instVarAt: 2 put: '[ (theSelf instVarNamed: ''enemigos'') anyOne. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
 	agilidad := 0.
 	consciente := True.
-	distraido := True.! !
+	distraido := False.! !
 
 
 !classDefinition: #CombatienteHumanoArthas category: 'AtaquesFantasticosPaso2'!
@@ -274,19 +274,21 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
+!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:08:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	fuerza := 0.
-	enemigos := #().
+	enemigos := ((Array new: 1) at: 1 put: CombatienteOrcoMankrik; yourself).
 	puntosDeVida := 20.
 	dañoAInfligir := 2.
-	dañoAAbsorber := 0.
-	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteHumanoArthas; instVarAt: 2 put: '[ (theSelf instVarNamed: ''enemigos'') anyOne. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
+	dañoAAbsorber := 6.
+	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteHumanoArthas; instVarAt: 2 put: '[
+	(theSelf instVarNamed: ''enemigos'') detectMin: [ :argm0_1 |
+		argm0_1 puntosDeVida ]. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
 	agilidad := 1.
 	consciente := True.
-	distraido := False.! !
+	distraido := True.! !
 
 
 !classDefinition: #CombatienteOrcoOlgra category: 'AtaquesFantasticosPaso2'!
@@ -387,18 +389,18 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
+!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:08:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	fuerza := 1.
-	enemigos := #().
-	puntosDeVida := 20.
+	enemigos := ((Array new: 1) at: 1 put: CombatienteHumanoArthas; yourself).
+	puntosDeVida := 0.
 	dañoAInfligir := 2.
 	dañoAAbsorber := 0.
 	estrategia := ((SerializableBlockClosure basicNew instVarAt: 1 put: CombatienteOrcoOlgra; instVarAt: 2 put: '[ (theSelf instVarNamed: ''enemigos'') anyOne. ]'; instVarAt: 3 put: #(); yourself) asEvaluable).
 	agilidad := 0.
-	consciente := True.
+	consciente := False.
 	distraido := False.! !
 
 
@@ -918,10 +920,10 @@ bando1
 bando2
 	^Bando2! !
 
-!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/19/2022 00:01:04'!
-desarrollarDuranteRondas: unNumero
+!OrquestadorDeCombate class methodsFor: 'as yet unclassified' stamp: 'EP 9/19/2022 00:08:36'!
+desarrollarDuranteRondas: rondasARealizar
 	rondasAlcanzadas := 0.
-	[rondasAlcanzadas < unNumero & (self hayGanador = false)] whileTrue: [
+	[rondasAlcanzadas < rondasARealizar & (self hayGanador = false)] whileTrue: [
 		self todosAtacan. 
 		rondasAlcanzadas := rondasAlcanzadas + 1. ].! !
 
@@ -958,12 +960,12 @@ todosAtacan
 	self bando2 atacar.! !
 
 
-!OrquestadorDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:07:05'!
+!OrquestadorDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/19/2022 00:08:48'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	ganador := 1.
-	rondasAlcanzadas := 4.! !
+	ganador := 'indeterminado'.
+	rondasAlcanzadas := 10.! !
 
 
 !classDefinition: #OrquestadorDeCombatesTest category: 'AtaquesFantasticosPaso2'!
