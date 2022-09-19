@@ -36,7 +36,7 @@ initializeCollaboratorsFromFile
 
 	combatientes := ((Array new: 1) at: 1 put: CombatienteHumanoArthas; yourself).! !
 
-
+
 !classDefinition: #Bando2 category: 'AtaquesFantasticosPaso2'!
 Bando1 subclass: #Bando2
 	instanceVariableNames: ''
@@ -56,7 +56,7 @@ initializeCollaboratorsFromFile
 
 	combatientes := ((Array new: 1) at: 1 put: CombatienteOrcoOlgra; yourself).! !
 
-
+
 !classDefinition: #Combate category: 'AtaquesFantasticosPaso2'!
 DenotativeObject subclass: #Combate
 	instanceVariableNames: ''
@@ -64,7 +64,7 @@ DenotativeObject subclass: #Combate
 	poolDictionaries: ''
 	category: 'AtaquesFantasticosPaso2'!
 
-
+
 !classDefinition: #CombatienteOrcoMankrik category: 'AtaquesFantasticosPaso2'!
 DenotativeObject subclass: #CombatienteOrcoMankrik
 	instanceVariableNames: ''
@@ -177,7 +177,7 @@ initializeCollaboratorsFromFile
 	consciente := True.
 	distraido := False.! !
 
-
+
 !classDefinition: #CombatienteHumanoArthas category: 'AtaquesFantasticosPaso2'!
 CombatienteOrcoMankrik subclass: #CombatienteHumanoArthas
 	instanceVariableNames: ''
@@ -290,7 +290,6 @@ initializeCollaboratorsFromFile
 	consciente := True.
 	distraido := False.! !
 
-
 !classDefinition: #CombatienteOrcoOlgra category: 'AtaquesFantasticosPaso2'!
 CombatienteOrcoMankrik subclass: #CombatienteOrcoOlgra
 	instanceVariableNames: ''
@@ -403,7 +402,6 @@ initializeCollaboratorsFromFile
 	consciente := True.
 	distraido := False.! !
 
-
 !classDefinition: #CombatientesTest category: 'AtaquesFantasticosPaso2'!
 DenotativeObject subclass: #CombatientesTest
 	instanceVariableNames: ''
@@ -830,7 +828,7 @@ comenzarUnNuevoCombate
 	CombatienteOrcoOlgra prepararseParaElCombate .
 	CombatienteOrcoMankrik prepararseParaElCombate .! !
 
-
+
 !classDefinition: #EstrategiasTest category: 'AtaquesFantasticosPaso2'!
 DenotativeObject subclass: #EstrategiasTest
 	instanceVariableNames: ''
@@ -897,7 +895,7 @@ test01FocalizarEnElMasHeridoEsMejorQueEnElMasSano
 	
 	Assert isTrue: self puntosDeVidaDelGanadorFocalizandoEnElMasHerido > self puntosDeVidaDelGanadorFocalizandoEnElMasSano.! !
 
-
+
 !classDefinition: #OrquestadorDeCombate category: 'AtaquesFantasticosPaso2'!
 DenotativeObject subclass: #OrquestadorDeCombate
 	instanceVariableNames: ''
@@ -961,7 +959,7 @@ initializeCollaboratorsFromFile
 	ganador := nil.
 	rondasAlcanzadas := 0.! !
 
-
+
 !classDefinition: #OrquestadorDeCombatesTest category: 'AtaquesFantasticosPaso2'!
 DenotativeObject subclass: #OrquestadorDeCombatesTest
 	instanceVariableNames: ''
