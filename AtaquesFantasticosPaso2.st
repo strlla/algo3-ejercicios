@@ -30,7 +30,7 @@ todosNoqueados
 	^(combatientesConscientes isEmpty).! !
 
 
-!Bando1 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:38'!
+!Bando1 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:40:53'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -50,7 +50,7 @@ Bando1 subclass: #Bando2
 Bando2 class
 	instanceVariableNames: ''!
 
-!Bando2 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:38'!
+!Bando2 class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:40:53'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -163,7 +163,7 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:39'!
+!CombatienteOrcoMankrik class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:40:53'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -276,7 +276,7 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:39'!
+!CombatienteHumanoArthas class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:40:53'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -389,7 +389,7 @@ tienePuntosDeVida: unosPuntos
 	^(unosPuntos = self puntosDeVida).! !
 
 
-!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:39'!
+!CombatienteOrcoOlgra class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:40:54'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -954,7 +954,7 @@ todosAtacan
 	self bando2 atacar.! !
 
 
-!OrquestadorDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:12:39'!
+!OrquestadorDeCombate class methodsFor: '--** private fileout/in **--' stamp: 'EP 9/18/2022 21:40:54'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
