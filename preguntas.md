@@ -10,4 +10,4 @@ Debido a el formato con el que trabajamos, creemos que esto es correcto porque s
  
 3. ¿Cómo modelaron el resultado de haber desarrollado un combate? ¿qué opciones consideraron y por qué se quedaron con la que entregaron y por qué descartaron a las otras?
  
-Decidimos modelar un orquestador, que guarda los bandos y hace que los combatientes en estos se ataquen por cada ronda que se desarrolla.  Transcurrido esto, se pregunta a cada bando si tiene a todos sus combatientes noqueados y decide un ganador en base a esto, que también guarda y chequeamos que la cantidad de rondas transcurridas, previamente guardadas en un colaborador interno, sea la correcta.
+El primer modelado que se nos ocurrió pareció ser suficiente, así que no exploramos otras alternativas. Decidimos modelar un orquestador, que guarda los bandos y hace que los combatientes en estos se ataquen por cada ronda que se desarrolla.  Transcurrido esto, se pregunta a cada bando si tiene a todos sus combatientes noqueados y decide un ganador en base a esto, que también guarda y chequeamos que la cantidad de rondas transcurridas, previamente guardadas en un colaborador interno, sea la correcta.
