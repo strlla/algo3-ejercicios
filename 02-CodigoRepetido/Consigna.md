@@ -15,12 +15,16 @@ Aclaración: Para hacer este ejercicio más sencillo se modela a un Customer uti
 
 En los test 01 y 02 hay código repetido. Cuando lo extrajeron crearon algo nuevo. Eso es algo que estaba en la realidad y no estaba representado en nuestro código, por eso teníamos código repetido. ¿Cuál es esa entidad de la realidad que crearon?
 
+Creamos un ente de la realidad que se encarga de medir el tiempo de ejecución del registro y borrado de clientes y verifica si supera una cierta cantidad de tiempo. Un ejemplo sería un cronómetro. Para hacer esto dimos uso de los métodos que poseía SmallTalk para bloques de código.
 
 ## Cómo representar en Smalltalk
 
 ¿Cuáles son las formas en que podemos representar entes de la realidad en Smalltalk que conocés? Es decir, ¿qué cosas del lenguaje Smalltalk puedo usar para representar entidades de la realidad?
 
+En Smalltalk, se pueden utilizar las clases para representar las ideas abstractas que conforman los objetos y las instancias para representar las entidades individuales y fisicas de estos con los que se interactúa en el día a día.
+
 ## Teoría de Naur
 
 ¿Qué relación hay entre sacar código repetido (creando abstracciones) y la teoría del modelo/sistema (del paper de Naur)?
 
+La teoría del modelo/sistema establece que los programas inevitablemente van a cambiarse a futuro por demanda del cliente. Debido a esto, se debe realizar el mayor esfuerzo posible para sacar todo código repetido, ya que este dificulta la capacidad del programa para ser cambiado. Además, deshacerse de el facilita la creación de modelos basados en la realidad.
