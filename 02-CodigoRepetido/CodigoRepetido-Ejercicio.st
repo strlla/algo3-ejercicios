@@ -35,79 +35,65 @@ test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:13:47'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 21:04:18'!
 test03CanNotAddACustomerWithEmptyName 
 
-	self should:[ customerBook addCustomerNamed: ''.]raise: Error withExceptionDo: [ :anError | 
-			self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
-			self assert: customerBook isEmpty ]! !
+	self should:[ customerBook addCustomerNamed: ''.]
+		raise: Error
+		withExceptionDo: [ :anError | 	self assertCustomerBookIsEmptyAndErrorMessageEqualsCustomerNameCanNotBeEmpty: anError ].! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:23:45'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:56:07'!
 test04CanNotRemoveAnInvalidCustomer
-	
-	| johnLennon |
-	
-	johnLennon := 'John Lennon'.
-	customerBook := customerBook addCustomerNamed:johnLennon .
 
-	self should:[ customerBook removeCustomerNamed: 'Paul McCartney'. ]raise: NotFound withExceptionDo: [ :anError | 
-			self bookHasOneCustomerAndIncludesJohnLennon]
+	customerBook := customerBook addCustomerNamed: 'John Lennon' .
+
+	self should:[ customerBook removeCustomerNamed: 'Paul McCartney'. ]
+		raise: NotFound 
+		withExceptionDo: [ :anError | 	self assertBookHasOneCustomerAndIncludesJohnLennon]
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:44:03'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:49:00'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
-	|paulMcCartney|
-	paulMcCartney := 'Paul McCartney'.
-	customerBook addCustomerNamed: paulMcCartney.
-	customerBook suspendCustomerNamed: paulMcCartney.
+	self setUpSuspendCustomerNamedPaulMcCartney. 
 	
-	self thisBookhasCustomers: 1 hasActive: 0 hasSuspended:1. 
-	self assert: (customerBook includesCustomerNamed: paulMcCartney).
+	self assertThisBookhasCustomers: 1 hasActive: 0 hasSuspended:1. 
+	self assert: (customerBook includesCustomerNamed: 'Paul McCartney').
 	
 
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:33:14'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:49:09'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 	self setUpDeleteSuspendedCustomerNamedPaulMcCartney . 
 	
-	self assert: 0 equals: customerBook numberOfActiveCustomers.
-	self assert: 0 equals: customerBook numberOfSuspendedCustomers.
-	self assert: 0 equals: customerBook numberOfCustomers.
+	self assertThisBookhasCustomers: 0 hasActive: 0 hasSuspended: 0. 
 	self deny: (customerBook includesCustomerNamed: 'Paul McCartney').
 
 
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:23:39'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:54:58'!
 test07CanNotSuspendAnInvalidCustomer
+
+	customerBook addCustomerNamed: 'John Lennon'.
 	
-	|johnLennon |
-	johnLennon := 'John Lennon'.	
-	customerBook addCustomerNamed: johnLennon.
-	
-	self should: [ customerBook suspendCustomerNamed: 'Ringo Starr'. ] raise: CantSuspend withExceptionDo:[ :anError | 
-			self bookHasOneCustomerAndIncludesJohnLennon ]
+	self should: [ customerBook suspendCustomerNamed: 'Ringo Starr'. ] 
+		raise: CantSuspend
+	 	withExceptionDo:[ :anError | 			self assertBookHasOneCustomerAndIncludesJohnLennon ]
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:23:35'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:54:11'!
 test08CanNotSuspendAnAlreadySuspendedCustomer
 	
-	| johnLennon |
-			
-	johnLennon := 'John Lennon'.
-	customerBook addCustomerNamed: johnLennon.
-	 
-	customerBook suspendCustomerNamed: johnLennon.
+	self setUpSuspendCustomerNamedJohnLennon.
 	
-	self should:[ customerBook suspendCustomerNamed: johnLennon.]
+	self should:[ customerBook suspendCustomerNamed: 'John Lennon'.]
 		raise: CantSuspend 
-		withExceptionDo: [ :anError | 
-			self bookHasOneCustomerAndIncludesJohnLennon ]
+		withExceptionDo: [ :anError | 			self assertBookHasOneCustomerAndIncludesJohnLennon ]
 ! !
 
 
@@ -123,17 +109,33 @@ setUpDeleteSuspendedCustomerNamedPaulMcCartney
 	customerBook suspendCustomerNamed: paulMcCartney.
 	customerBook removeCustomerNamed: paulMcCartney.! !
 
+!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 20:52:32'!
+setUpSuspendCustomerNamedJohnLennon
+	|johnLennon|
+	johnLennon := 'John Lennon'.
+	customerBook addCustomerNamed: johnLennon .
+	customerBook suspendCustomerNamed: johnLennon .! !
 
-!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 20:23:22'!
-bookHasOneCustomerAndIncludesJohnLennon
+!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 20:46:20'!
+setUpSuspendCustomerNamedPaulMcCartney
+	|paulMcCartney|
+	paulMcCartney := 'Paul McCartney'.
+	customerBook addCustomerNamed: paulMcCartney.
+	customerBook suspendCustomerNamed: paulMcCartney.! !
+
+
+!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 20:48:00'!
+assertBookHasOneCustomerAndIncludesJohnLennon
 		self assert: customerBook numberOfCustomers = 1 .
 		self assert: (customerBook includesCustomerNamed: 'John Lennon')! !
 
-!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 20:35:00'!
-bookIsCompletelyEmpty! !
+!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 21:03:57'!
+assertCustomerBookIsEmptyAndErrorMessageEqualsCustomerNameCanNotBeEmpty: anError
+	self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
+	self assert: customerBook isEmpty. ! !
 
-!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 20:43:42'!
-thisBookhasCustomers: numberOfCustomers hasActive: numberOfActiveCustomers hasSuspended: numberOfSuspendedCustomers
+!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 20:48:47'!
+assertThisBookhasCustomers: numberOfCustomers hasActive: numberOfActiveCustomers hasSuspended: numberOfSuspendedCustomers
 	self assert: numberOfCustomers equals: customerBook numberOfCustomers.
 	self assert: numberOfActiveCustomers equals: customerBook numberOfActiveCustomers.
 	self assert: numberOfSuspendedCustomers equals: customerBook numberOfSuspendedCustomers.
