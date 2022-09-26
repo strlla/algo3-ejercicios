@@ -21,7 +21,7 @@ Creamos un ente de la realidad que se encarga de medir el tiempo de ejecución d
 
 ¿Cuáles son las formas en que podemos representar entes de la realidad en Smalltalk que conocés? Es decir, ¿qué cosas del lenguaje Smalltalk puedo usar para representar entidades de la realidad?
 
-En Smalltalk, se pueden utilizar las clases para representar las ideas abstractas que conforman los objetos y las instancias para representar las entidades individuales y fisicas de estos con los que se interactúa en el día a día.
+En Smalltalk, se pueden utilizar las clases para representar las ideas abstractas que conforman los objetos y las instancias para representar las entidades individuales y fisicas de estos con los que se interactúa en el día a día. A su vez, estos objetos tienen mensajes que definen su comportamiento.
 
 ## Teoría de Naur
 
