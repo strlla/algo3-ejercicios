@@ -16,130 +16,126 @@ Error subclass: #NotFound
 
 !classDefinition: #CustomerBookTest category: 'CodigoRepetido-Ejercicio'!
 TestCase subclass: #CustomerBookTest
-	instanceVariableNames: 'customerBook'
+	instanceVariableNames: 'customerBook paulMcCartney johnLennon'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:13:47'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 23:49:48'!
 test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 
-	self should: [customerBook addCustomerNamed: 'John Lennon'] notTakeMoreThan: 50 milliSeconds .! !
+	self should: [customerBook addCustomerNamed: johnLennon ] notTakeMoreThan: 50 milliSeconds .! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:13:47'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 23:49:59'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 
-	customerBook addCustomerNamed: 'Paul McCartney'.
+	customerBook addCustomerNamed: paulMcCartney .
 	
-	self should: [customerBook removeCustomerNamed: 'Paul McCartney'.] notTakeMoreThan: 100 milliSeconds.
+	self should: [customerBook removeCustomerNamed: paulMcCartney .] notTakeMoreThan: 100 milliSeconds.
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 21:04:18'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 23:56:34'!
 test03CanNotAddACustomerWithEmptyName 
 
 	self should:[ customerBook addCustomerNamed: ''.]
 		raise: Error
-		withExceptionDo: [ :anError | 	self assertCustomerBookIsEmptyAndErrorMessageEqualsCustomerNameCanNotBeEmpty: anError ].! !
+		withExceptionDo: [ :anError | 	self assertThisBook: customerBook 
+								isEmptyAndErrorMessageEqualsCustomerNameCanNotBeEmpty: anError ].! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:56:07'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 23:53:06'!
 test04CanNotRemoveAnInvalidCustomer
 
-	customerBook := customerBook addCustomerNamed: 'John Lennon' .
+	customerBook := customerBook addCustomerNamed: johnLennon .
 
-	self should:[ customerBook removeCustomerNamed: 'Paul McCartney'. ]
+	self should:[ customerBook removeCustomerNamed: paulMcCartney. ]
 		raise: NotFound 
-		withExceptionDo: [ :anError | 	self assertBookHasOneCustomerAndIncludesJohnLennon]
+		withExceptionDo: [ :anError | 	self assertThisBookHasOneCustomerAndIncludesJohnLennon: customerBook]
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:49:00'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 23:57:21'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
 	self setUpSuspendCustomerNamedPaulMcCartney. 
 	
-	self assertThisBookhasCustomers: 1 hasActive: 0 hasSuspended:1. 
-	self assert: (customerBook includesCustomerNamed: 'Paul McCartney').
+	self assertThisBook: customerBook hasCustomers: 1 hasActive: 0 hasSuspended:1. 
+	self assert: (customerBook includesCustomerNamed: paulMcCartney).
 	
 
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:49:09'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 23:57:29'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 	self setUpDeleteSuspendedCustomerNamedPaulMcCartney . 
 	
-	self assertThisBookhasCustomers: 0 hasActive: 0 hasSuspended: 0. 
-	self deny: (customerBook includesCustomerNamed: 'Paul McCartney').
+	self assertThisBook: customerBook hasCustomers: 0 hasActive: 0 hasSuspended: 0. 
+	self deny: (customerBook includesCustomerNamed: paulMcCartney ).
 
 
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:54:58'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 23:53:14'!
 test07CanNotSuspendAnInvalidCustomer
 
-	customerBook addCustomerNamed: 'John Lennon'.
+	customerBook addCustomerNamed: johnLennon.
 	
 	self should: [ customerBook suspendCustomerNamed: 'Ringo Starr'. ] 
 		raise: CantSuspend
-	 	withExceptionDo:[ :anError | 			self assertBookHasOneCustomerAndIncludesJohnLennon ]
+	 	withExceptionDo:[ :anError | 			self assertThisBookHasOneCustomerAndIncludesJohnLennon: customerBook ]
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 20:54:11'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'MN 9/25/2022 23:53:24'!
 test08CanNotSuspendAnAlreadySuspendedCustomer
 	
 	self setUpSuspendCustomerNamedJohnLennon.
 	
-	self should:[ customerBook suspendCustomerNamed: 'John Lennon'.]
+	self should:[ customerBook suspendCustomerNamed: johnLennon.]
 		raise: CantSuspend 
-		withExceptionDo: [ :anError | 			self assertBookHasOneCustomerAndIncludesJohnLennon ]
+		withExceptionDo: [ :anError | 			self assertThisBookHasOneCustomerAndIncludesJohnLennon: customerBook ]
 ! !
 
 
-!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 20:13:47'!
+!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 23:49:37'!
 setUp
-	customerBook := CustomerBook new.! !
-
-!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 20:33:03'!
-setUpDeleteSuspendedCustomerNamedPaulMcCartney
-	|paulMcCartney|
+	customerBook := CustomerBook new.
 	paulMcCartney := 'Paul McCartney'.
+	johnLennon := 'John Lennon'! !
+
+!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 23:48:57'!
+setUpDeleteSuspendedCustomerNamedPaulMcCartney
 	customerBook addCustomerNamed: paulMcCartney.
 	customerBook suspendCustomerNamed: paulMcCartney.
 	customerBook removeCustomerNamed: paulMcCartney.! !
 
-!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 20:52:32'!
+!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 23:48:47'!
 setUpSuspendCustomerNamedJohnLennon
-	|johnLennon|
-	johnLennon := 'John Lennon'.
 	customerBook addCustomerNamed: johnLennon .
 	customerBook suspendCustomerNamed: johnLennon .! !
 
-!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 20:46:20'!
+!CustomerBookTest methodsFor: 'testSetUps' stamp: 'MN 9/25/2022 23:48:57'!
 setUpSuspendCustomerNamedPaulMcCartney
-	|paulMcCartney|
-	paulMcCartney := 'Paul McCartney'.
 	customerBook addCustomerNamed: paulMcCartney.
 	customerBook suspendCustomerNamed: paulMcCartney.! !
 
 
-!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 20:48:00'!
-assertBookHasOneCustomerAndIncludesJohnLennon
-		self assert: customerBook numberOfCustomers = 1 .
-		self assert: (customerBook includesCustomerNamed: 'John Lennon')! !
+!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 23:57:06'!
+assertThisBook: aBook hasCustomers: numberOfCustomers hasActive: numberOfActiveCustomers hasSuspended: numberOfSuspendedCustomers
+    self assert: numberOfCustomers equals: aBook numberOfCustomers.
+    self assert: numberOfActiveCustomers equals: aBook numberOfActiveCustomers.
+    self assert: numberOfSuspendedCustomers equals: aBook numberOfSuspendedCustomers.! !
 
-!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 21:03:57'!
-assertCustomerBookIsEmptyAndErrorMessageEqualsCustomerNameCanNotBeEmpty: anError
-	self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
-	self assert: customerBook isEmpty. ! !
+!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 23:54:44'!
+assertThisBook: aBook isEmptyAndErrorMessageEqualsCustomerNameCanNotBeEmpty: anError
+    self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
+    self assert: aBook  isEmpty.! !
 
-!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 20:48:47'!
-assertThisBookhasCustomers: numberOfCustomers hasActive: numberOfActiveCustomers hasSuspended: numberOfSuspendedCustomers
-	self assert: numberOfCustomers equals: customerBook numberOfCustomers.
-	self assert: numberOfActiveCustomers equals: customerBook numberOfActiveCustomers.
-	self assert: numberOfSuspendedCustomers equals: customerBook numberOfSuspendedCustomers.
-	! !
+!CustomerBookTest methodsFor: 'commonAsserts' stamp: 'MN 9/25/2022 23:52:09'!
+assertThisBookHasOneCustomerAndIncludesJohnLennon: aBook 
+        self assert: aBook numberOfCustomers = 1 .
+        self assert: (aBook includesCustomerNamed: johnLennon )! !
 
 
 !classDefinition: #CustomerBook category: 'CodigoRepetido-Ejercicio'!
