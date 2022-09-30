@@ -314,6 +314,26 @@ Object subclass: #Numero
 
 	self subclassResponsibility ! !
 
+!Numero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:11:22'!
+beAddedWithAFraction: aFraction
+	
+	self subclassResponsibility. ! !
+
+!Numero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:11:51'!
+beAddedWithAnInteger: anInteger
+	
+	self subclassResponsibility.! !
+
+!Numero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:12:25'!
+beSubtractedToAFraction: aFraction
+	
+	self subclassResponsibility. ! !
+
+!Numero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:12:55'!
+beSubtractedToAnInteger: anInteger
+	
+	self subclassResponsibility.! !
+
 !Numero methodsFor: 'arithmetic operations' stamp: 'NR 9/23/2018 23:37:13'!
 negated
 	
@@ -372,24 +392,39 @@ Numero subclass: #Entero
 	^(self value * aMultiplier numerator) / aMultiplier denominator.
 	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:00:16'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 17:52:04'!
 + anAdder 
 
-	(anAdder isKindOf: Entero) ifTrue: [^self class with: value + anAdder integerValue]. 
-		
-	^((self value * anAdder denominator) + anAdder numerator ) / anAdder denominator.! !
+	^anAdder beAddedWithAnInteger: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:02:09'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:51:59'!
 - aSubtrahend 
-	(aSubtrahend isKindOf: Entero) ifTrue: [^self class with: value - aSubtrahend integerValue]. 
-		
-	^((self value * aSubtrahend denominator) - aSubtrahend numerator ) / aSubtrahend denominator.! !
+
+	^aSubtrahend beSubtractedToAnInteger: self .! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:07:44'!
 / aDivisor 
 	(aDivisor isKindOf: Entero) ifTrue: [^Fraccion with: self over: aDivisor]. 
 
 	^(self value * aDivisor denominator ) / aDivisor numerator.! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:00:39'!
+beAddedWithAFraction: aFraction
+
+	^aFraction beAddedWithAnInteger: self.! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 17:47:32'!
+beAddedWithAnInteger: anInteger
+
+	^self class with: value + anInteger integerValue! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:09:31'!
+beSubtractedToAFraction: aFraction
+	^(aFraction numerator - (self value * aFraction denominator)) / aFraction denominator.! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:04:19'!
+beSubtractedToAnInteger: anInteger
+	^ self class with:(anInteger integerValue  - self integerValue).! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HAW 9/24/2018 08:47:50'!
 fibonacci
@@ -496,29 +531,16 @@ Numero subclass: #Fraccion
 
 	^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:11:42'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:02:15'!
 + anAdder 
 
-	| newNumerator newDenominator |
 	
-	(anAdder isKindOf: Entero) ifTrue: [^((anAdder value * self denominator) + self numerator ) / self denominator].
-		
-	newNumerator := (numerator * anAdder denominator) + (denominator * anAdder numerator).
-	newDenominator := denominator * anAdder denominator.
-	
-	^newNumerator / newDenominator ! !
+	^anAdder beAddedWithAFraction: self.! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:14:13'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:47:07'!
 - aSubtrahend 
 
-	| newNumerator newDenominator |
-	
-	(aSubtrahend isKindOf: Entero) ifTrue: [^(self numerator  - (aSubtrahend value * self denominator)) / self denominator].
-
-	newNumerator := (numerator * aSubtrahend denominator) - (denominator * aSubtrahend numerator).
-	newDenominator := denominator * aSubtrahend denominator.
-	
-	^newNumerator / newDenominator 
+	^aSubtrahend beSubtractedToAFraction: self.
 ! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:16:08'!
@@ -527,6 +549,36 @@ Numero subclass: #Fraccion
        (aDivisor isKindOf: Entero) ifTrue: [^self numerator  / (self denominator * aDivisor value)].
 
 	^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:01:45'!
+beAddedWithAFraction: aFraction
+
+	| newNumerator newDenominator |
+	
+	newNumerator := (numerator * aFraction denominator) + (denominator * aFraction numerator).
+	newDenominator := denominator * aFraction denominator.
+	
+	^newNumerator / newDenominator ! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 17:59:50'!
+beAddedWithAnInteger: anInteger
+	^((anInteger value * self denominator) + self numerator ) / self denominator.! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:45:19'!
+beSubtractedToAFraction: aFraction
+	| newNumerator newDenominator |
+	
+	newNumerator := (denominator * aFraction numerator) -  (numerator * aFraction denominator) .
+	newDenominator := denominator * aFraction denominator.
+	
+	^newNumerator / newDenominator 
+! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:08:29'!
+beSubtractedToAnInteger: anInteger
+	
+	^((anInteger value * self denominator) - self numerator) / self denominator.
+! !
 
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
