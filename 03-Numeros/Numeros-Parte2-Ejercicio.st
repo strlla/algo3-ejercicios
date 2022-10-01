@@ -384,13 +384,9 @@ Numero subclass: #Entero
 	poolDictionaries: ''
 	category: 'Numeros-Parte2-Ejercicio'!
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:04:41'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:16:42'!
 * aMultiplier 
-
-	(aMultiplier isKindOf: Entero) ifTrue: [^self class with: value * aMultiplier integerValue]. 
-		
-	^(self value * aMultiplier numerator) / aMultiplier denominator.
-	! !
+	^aMultiplier beMultipliedWithAnInteger: self.	! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 17:52:04'!
 + anAdder 
@@ -417,6 +413,15 @@ beAddedWithAFraction: aFraction
 beAddedWithAnInteger: anInteger
 
 	^self class with: value + anInteger integerValue! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:16:18'!
+beMultipliedWithAFraction: aFraction
+	^(self value * aFraction numerator) / aFraction denominator.
+! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:15:53'!
+beMultipliedWithAnInteger: anInteger
+	^self class with: value * anInteger integerValue.	! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:09:31'!
 beSubtractedToAFraction: aFraction
@@ -524,17 +529,14 @@ Numero subclass: #Fraccion
 	poolDictionaries: ''
 	category: 'Numeros-Parte2-Ejercicio'!
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:17:29'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:18:42'!
 * aMultiplier 
 	
-	(aMultiplier isKindOf: Entero) ifTrue: [^(aMultiplier value * self numerator) / self denominator].
+	^aMultiplier beMultipliedWithAFraction: self.! !
 
-	^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)	! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:02:15'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:18:18'!
 + anAdder 
 
-	
 	^anAdder beAddedWithAFraction: self.! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:47:07'!
@@ -563,6 +565,15 @@ beAddedWithAFraction: aFraction
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 17:59:50'!
 beAddedWithAnInteger: anInteger
 	^((anInteger value * self denominator) + self numerator ) / self denominator.! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:18:00'!
+beMultipliedWithAFraction: aFraction	
+	^(numerator * aFraction numerator) / (denominator * aFraction denominator).! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:17:42'!
+beMultipliedWithAnInteger: anInteger	
+	^(anInteger value * self numerator) / self denominator.
+! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:45:19'!
 beSubtractedToAFraction: aFraction
