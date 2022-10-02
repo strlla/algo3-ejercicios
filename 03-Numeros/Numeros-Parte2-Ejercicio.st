@@ -334,6 +334,16 @@ beSubtractedToAnInteger: anInteger
 	
 	self subclassResponsibility.! !
 
+!Numero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:26:31'!
+divideAFraction: aFraction
+
+	self subclassResponsibility.! !
+
+!Numero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:23:29'!
+divideAnInteger: anInteger
+
+	self subclassResponsibility.! !
+
 !Numero methodsFor: 'arithmetic operations' stamp: 'NR 9/23/2018 23:37:13'!
 negated
 	
@@ -398,11 +408,9 @@ Numero subclass: #Entero
 
 	^aSubtrahend beSubtractedToAnInteger: self .! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:07:44'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:14:37'!
 / aDivisor 
-	(aDivisor isKindOf: Entero) ifTrue: [^Fraccion with: self over: aDivisor]. 
-
-	^(self value * aDivisor denominator ) / aDivisor numerator.! !
+	^aDivisor divideAnInteger: self.! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:00:39'!
 beAddedWithAFraction: aFraction
@@ -430,6 +438,16 @@ beSubtractedToAFraction: aFraction
 !Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:04:19'!
 beSubtractedToAnInteger: anInteger
 	^ self class with:(anInteger integerValue  - self integerValue).! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:26:25'!
+divideAFraction:		 aFraction
+
+	^Fraccion with: aFraction numerator over: self value * aFraction denominator.! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:14:17'!
+divideAnInteger:		 anInteger
+
+	^Fraccion with: anInteger over: self. ! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HAW 9/24/2018 08:47:50'!
 fibonacci
@@ -545,12 +563,10 @@ Numero subclass: #Fraccion
 	^aSubtrahend beSubtractedToAFraction: self.
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/29/2022 20:16:08'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:21:41'!
 / aDivisor 
 
-       (aDivisor isKindOf: Entero) ifTrue: [^self numerator  / (self denominator * aDivisor value)].
-
-	^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)! !
+       ^aDivisor divideAFraction: self.! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:01:45'!
 beAddedWithAFraction: aFraction
@@ -590,6 +606,16 @@ beSubtractedToAnInteger: anInteger
 	
 	^((anInteger value * self denominator) - self numerator) / self denominator.
 ! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:25:24'!
+divideAFraction: aFraction
+
+	^(aFraction numerator * denominator) / (aFraction denominator * numerator).! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:16:59'!
+divideAnInteger: anInteger
+
+	^Fraccion with: (self denominator * anInteger value) over: self numerator.! !
 
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
