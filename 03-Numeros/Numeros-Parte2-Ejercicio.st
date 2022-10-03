@@ -449,19 +449,9 @@ divideAnInteger:		 anInteger
 
 	^Fraccion with: anInteger over: self. ! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'HAW 9/24/2018 08:47:50'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 21:57:09'!
 fibonacci
-
-	| one two |
-	
-	one := Entero with: 1.
-	two := Entero with: 2.
-	
-	self isNegative ifTrue: [self error: Entero negativeFibonacciErrorDescription ].	
-	(self isZero or: [self isOne]) ifTrue: [^one].
-	
-	^ (self - one) fibonacci + (self - two) fibonacci
-		! !
+	self subclassResponsibility.! !
 
 
 !Entero methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 21:01'!
@@ -531,13 +521,110 @@ Entero class
 negativeFibonacciErrorDescription
 	^ ' Fibonacci no está definido aquí para Enteros Negativos'! !
 
-!Entero class methodsFor: 'instance creation' stamp: 'JS 5/5/2022 03:55:37'!
+!Entero class methodsFor: 'instance creation' stamp: 'EP 10/2/2022 21:51:43'!
 with: aValue 
+	| subclassDetected |
 	
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
-	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
 	
-	^self new initializeWith: aValue! !
+	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
+
+	subclassDetected := Entero subclasses detect: [:EnteroSubclass | EnteroSubclass belongsTo: aValue].
+	
+	^subclassDetected new initializeWith: aValue.! !
+
+
+!classDefinition: #Cero category: 'Numeros-Parte2-Ejercicio'!
+Entero subclass: #Cero
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+!Cero methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:38:46'!
+fibonacci
+	^Entero with: 1.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Cero class' category: 'Numeros-Parte2-Ejercicio'!
+Cero class
+	instanceVariableNames: ''!
+
+!Cero class methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:52:08'!
+belongsTo: aValue
+	^aValue = 0.! !
+
+
+!classDefinition: #EnteroNegativo category: 'Numeros-Parte2-Ejercicio'!
+Entero subclass: #EnteroNegativo
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+!EnteroNegativo methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:40:47'!
+fibonacci
+	self error: Entero negativeFibonacciErrorDescription.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'EnteroNegativo class' category: 'Numeros-Parte2-Ejercicio'!
+EnteroNegativo class
+	instanceVariableNames: ''!
+
+!EnteroNegativo class methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:52:24'!
+belongsTo: aValue
+	^aValue < 0! !
+
+
+!classDefinition: #EnteroPositivo category: 'Numeros-Parte2-Ejercicio'!
+Entero subclass: #EnteroPositivo
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+!EnteroPositivo methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:56:32'!
+fibonacci
+	| one two |
+		
+	one := Entero with: 1.
+	two := Entero with: 2.
+	
+	^ (self - one) fibonacci + (self - two) fibonacci! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'EnteroPositivo class' category: 'Numeros-Parte2-Ejercicio'!
+EnteroPositivo class
+	instanceVariableNames: ''!
+
+!EnteroPositivo class methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:58:38'!
+belongsTo: aValue
+	^aValue > 1.! !
+
+
+!classDefinition: #Uno category: 'Numeros-Parte2-Ejercicio'!
+Entero subclass: #Uno
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Numeros-Parte2-Ejercicio'!
+
+!Uno methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:54:39'!
+fibonacci
+	^Entero with: 1.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Uno class' category: 'Numeros-Parte2-Ejercicio'!
+Uno class
+	instanceVariableNames: ''!
+
+!Uno class methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:55:02'!
+belongsTo: aValue
+	^aValue = 1.! !
 
 
 !classDefinition: #Fraccion category: 'Numeros-Parte2-Ejercicio'!
@@ -681,18 +768,21 @@ printOn: aStream
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'NR 9/23/2018 23:45:19'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'EP 10/2/2022 22:03:03'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
 	
 	aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ].
+	
 	aDividend isZero ifTrue: [ ^aDividend ].
 	
 	aDivisor isNegative ifTrue:[ ^aDividend negated / aDivisor negated].
 	
 	greatestCommonDivisor := aDividend greatestCommonDivisorWith: aDivisor. 
+	
 	numerator := aDividend // greatestCommonDivisor.
+	
 	denominator := aDivisor // greatestCommonDivisor.
 	
 	denominator isOne ifTrue: [ ^numerator ].
