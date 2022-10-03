@@ -521,17 +521,15 @@ Entero class
 negativeFibonacciErrorDescription
 	^ ' Fibonacci no está definido aquí para Enteros Negativos'! !
 
-!Entero class methodsFor: 'instance creation' stamp: 'EP 10/2/2022 21:51:43'!
+!Entero class methodsFor: 'instance creation' stamp: 'EP 10/2/2022 22:24:49'!
 with: aValue 
-	| subclassDetected |
 	
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
 	
-	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
-
-	subclassDetected := Entero subclasses detect: [:EnteroSubclass | EnteroSubclass belongsTo: aValue].
-	
-	^subclassDetected new initializeWith: aValue.! !
+	Entero subclasses detect: [:EnteroSubclass | EnteroSubclass belongsTo: aValue]
+			ifFound: [:EnteroSubclass | ^EnteroSubclass new initializeWith: aValue]
+			ifNone:[ self error: 'aValue debe ser anInteger'].
+	.! !
 
 
 !classDefinition: #Cero category: 'Numeros-Parte2-Ejercicio'!
@@ -541,7 +539,7 @@ Entero subclass: #Cero
 	poolDictionaries: ''
 	category: 'Numeros-Parte2-Ejercicio'!
 
-!Cero methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:38:46'!
+!Cero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 21:38:46'!
 fibonacci
 	^Entero with: 1.! !
 
@@ -551,7 +549,7 @@ fibonacci
 Cero class
 	instanceVariableNames: ''!
 
-!Cero class methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:52:08'!
+!Cero class methodsFor: 'belonging' stamp: 'EP 10/2/2022 21:52:08'!
 belongsTo: aValue
 	^aValue = 0.! !
 
@@ -563,7 +561,7 @@ Entero subclass: #EnteroNegativo
 	poolDictionaries: ''
 	category: 'Numeros-Parte2-Ejercicio'!
 
-!EnteroNegativo methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:40:47'!
+!EnteroNegativo methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 21:40:47'!
 fibonacci
 	self error: Entero negativeFibonacciErrorDescription.! !
 
@@ -573,9 +571,9 @@ fibonacci
 EnteroNegativo class
 	instanceVariableNames: ''!
 
-!EnteroNegativo class methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:52:24'!
+!EnteroNegativo class methodsFor: 'belonging' stamp: 'EP 10/2/2022 22:21:23'!
 belongsTo: aValue
-	^aValue < 0! !
+	^aValue < 0 and: aValue isInteger.! !
 
 
 !classDefinition: #EnteroPositivo category: 'Numeros-Parte2-Ejercicio'!
@@ -585,7 +583,7 @@ Entero subclass: #EnteroPositivo
 	poolDictionaries: ''
 	category: 'Numeros-Parte2-Ejercicio'!
 
-!EnteroPositivo methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:56:32'!
+!EnteroPositivo methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 21:56:32'!
 fibonacci
 	| one two |
 		
@@ -600,9 +598,9 @@ fibonacci
 EnteroPositivo class
 	instanceVariableNames: ''!
 
-!EnteroPositivo class methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:58:38'!
+!EnteroPositivo class methodsFor: 'belonging' stamp: 'EP 10/2/2022 22:21:37'!
 belongsTo: aValue
-	^aValue > 1.! !
+	^aValue > 1 and: aValue isInteger.! !
 
 
 !classDefinition: #Uno category: 'Numeros-Parte2-Ejercicio'!
@@ -612,7 +610,7 @@ Entero subclass: #Uno
 	poolDictionaries: ''
 	category: 'Numeros-Parte2-Ejercicio'!
 
-!Uno methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:54:39'!
+!Uno methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 21:54:39'!
 fibonacci
 	^Entero with: 1.! !
 
@@ -622,7 +620,7 @@ fibonacci
 Uno class
 	instanceVariableNames: ''!
 
-!Uno class methodsFor: 'as yet unclassified' stamp: 'EP 10/2/2022 21:55:02'!
+!Uno class methodsFor: 'belonging' stamp: 'EP 10/2/2022 21:55:02'!
 belongsTo: aValue
 	^aValue = 1.! !
 

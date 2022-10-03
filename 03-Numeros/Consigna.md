@@ -62,6 +62,7 @@ Con lo que vieron y trabajaron hasta ahora, ¿qué criterio están usando para c
 
 ### Subclass Responsibility
 Si todas las subclases saben responder un mismo mensaje, ¿por qué ponemos ese mensaje sólo con un “self subclassResponsibility” en la superclase? ¿para qué sirve?
+Para advertir que se está instanciando la clase abstracta y que queda bajo la responsabilidad de las subclases responder a ese mensaje. 
 
 ### No rompas
 ¿Por qué está mal/qué problemas trae romper encapsulamiento?
