@@ -412,43 +412,6 @@ Numero subclass: #Entero
 / aDivisor 
 	^aDivisor divideAnInteger: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:00:39'!
-beAddedWithAFraction: aFraction
-
-	^aFraction beAddedWithAnInteger: self.! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 17:47:32'!
-beAddedWithAnInteger: anInteger
-
-	^self class with: value + anInteger integerValue! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:16:18'!
-beMultipliedWithAFraction: aFraction
-	^(self value * aFraction numerator) / aFraction denominator.
-! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:15:53'!
-beMultipliedWithAnInteger: anInteger
-	^self class with: value * anInteger integerValue.	! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:09:31'!
-beSubtractedToAFraction: aFraction
-	^(aFraction numerator - (self value * aFraction denominator)) / aFraction denominator.! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:04:19'!
-beSubtractedToAnInteger: anInteger
-	^ self class with:(anInteger integerValue  - self integerValue).! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:26:25'!
-divideAFraction:		 aFraction
-
-	^Fraccion with: aFraction numerator over: self value * aFraction denominator.! !
-
-!Entero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:14:17'!
-divideAnInteger:		 anInteger
-
-	^Fraccion with: anInteger over: self. ! !
-
 !Entero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 21:57:09'!
 fibonacci
 	self subclassResponsibility.! !
@@ -511,6 +474,48 @@ greatestCommonDivisorWith: anEntero
 	
 	^self class with: (value gcd: anEntero integerValue)! !
 
+
+!Entero methodsFor: 'dd' stamp: 'EP 10/2/2022 22:32:10'!
+asADivisor
+	^self! !
+
+!Entero methodsFor: 'dd' stamp: 'EP 9/30/2022 18:00:39'!
+beAddedWithAFraction: aFraction
+
+	^aFraction beAddedWithAnInteger: self.! !
+
+!Entero methodsFor: 'dd' stamp: 'EP 9/30/2022 17:47:32'!
+beAddedWithAnInteger: anInteger
+
+	^self class with: value + anInteger integerValue! !
+
+!Entero methodsFor: 'dd' stamp: 'EP 9/30/2022 19:16:18'!
+beMultipliedWithAFraction: aFraction
+	^(self value * aFraction numerator) / aFraction denominator.
+! !
+
+!Entero methodsFor: 'dd' stamp: 'EP 9/30/2022 19:15:53'!
+beMultipliedWithAnInteger: anInteger
+	^self class with: value * anInteger integerValue.	! !
+
+!Entero methodsFor: 'dd' stamp: 'EP 9/30/2022 19:09:31'!
+beSubtractedToAFraction: aFraction
+	^(aFraction numerator - (self value * aFraction denominator)) / aFraction denominator.! !
+
+!Entero methodsFor: 'dd' stamp: 'EP 9/30/2022 19:04:19'!
+beSubtractedToAnInteger: anInteger
+	^ self class with:(anInteger integerValue  - self integerValue).! !
+
+!Entero methodsFor: 'dd' stamp: 'EP 10/2/2022 00:26:25'!
+divideAFraction:		 aFraction
+
+	^Fraccion with: aFraction numerator over: self value * aFraction denominator.! !
+
+!Entero methodsFor: 'dd' stamp: 'EP 10/2/2022 00:14:17'!
+divideAnInteger:		 anInteger
+
+	^Fraccion with: anInteger over: self. ! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Entero class' category: 'Numeros-Parte2-Ejercicio'!
@@ -542,6 +547,11 @@ Entero subclass: #Cero
 !Cero methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 21:38:46'!
 fibonacci
 	^Entero with: 1.! !
+
+
+!Cero methodsFor: 'dd' stamp: 'EP 10/2/2022 22:29:23'!
+asADivisor
+	self error: Fraccion canNotDivideByZeroErrorDescription ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -653,55 +663,6 @@ Numero subclass: #Fraccion
 
        ^aDivisor divideAFraction: self.! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:01:45'!
-beAddedWithAFraction: aFraction
-
-	| newNumerator newDenominator |
-	
-	newNumerator := (numerator * aFraction denominator) + (denominator * aFraction numerator).
-	newDenominator := denominator * aFraction denominator.
-	
-	^newNumerator / newDenominator ! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 17:59:50'!
-beAddedWithAnInteger: anInteger
-	^((anInteger value * self denominator) + self numerator ) / self denominator.! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:18:00'!
-beMultipliedWithAFraction: aFraction	
-	^(numerator * aFraction numerator) / (denominator * aFraction denominator).! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:17:42'!
-beMultipliedWithAnInteger: anInteger	
-	^(anInteger value * self numerator) / self denominator.
-! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 18:45:19'!
-beSubtractedToAFraction: aFraction
-	| newNumerator newDenominator |
-	
-	newNumerator := (denominator * aFraction numerator) -  (numerator * aFraction denominator) .
-	newDenominator := denominator * aFraction denominator.
-	
-	^newNumerator / newDenominator 
-! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 9/30/2022 19:08:29'!
-beSubtractedToAnInteger: anInteger
-	
-	^((anInteger value * self denominator) - self numerator) / self denominator.
-! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:25:24'!
-divideAFraction: aFraction
-
-	^(aFraction numerator * denominator) / (aFraction denominator * numerator).! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 00:16:59'!
-divideAnInteger: anInteger
-
-	^Fraccion with: (self denominator * anInteger value) over: self numerator.! !
-
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:42'!
 = anObject
@@ -752,6 +713,56 @@ isZero
 	^false! !
 
 
+!Fraccion methodsFor: 'dd' stamp: 'EP 9/30/2022 18:01:45'!
+beAddedWithAFraction: aFraction
+
+	| newNumerator newDenominator |
+	
+	newNumerator := (numerator * aFraction denominator) + (denominator * aFraction numerator).
+	newDenominator := denominator * aFraction denominator.
+	
+	^newNumerator / newDenominator ! !
+
+!Fraccion methodsFor: 'dd' stamp: 'EP 9/30/2022 17:59:50'!
+beAddedWithAnInteger: anInteger
+	^((anInteger value * self denominator) + self numerator ) / self denominator.! !
+
+!Fraccion methodsFor: 'dd' stamp: 'EP 9/30/2022 19:18:00'!
+beMultipliedWithAFraction: aFraction	
+	^(numerator * aFraction numerator) / (denominator * aFraction denominator).! !
+
+!Fraccion methodsFor: 'dd' stamp: 'EP 9/30/2022 19:17:42'!
+beMultipliedWithAnInteger: anInteger	
+	^(anInteger value * self numerator) / self denominator.
+! !
+
+!Fraccion methodsFor: 'dd' stamp: 'EP 9/30/2022 18:45:19'!
+beSubtractedToAFraction: aFraction
+	| newNumerator newDenominator |
+	
+	newNumerator := (denominator * aFraction numerator) -  (numerator * aFraction denominator) .
+	newDenominator := denominator * aFraction denominator.
+	
+	^newNumerator / newDenominator 
+! !
+
+!Fraccion methodsFor: 'dd' stamp: 'EP 9/30/2022 19:08:29'!
+beSubtractedToAnInteger: anInteger
+	
+	^((anInteger value * self denominator) - self numerator) / self denominator.
+! !
+
+!Fraccion methodsFor: 'dd' stamp: 'EP 10/2/2022 00:25:24'!
+divideAFraction: aFraction
+
+	^(aFraction numerator * denominator) / (aFraction denominator * numerator).! !
+
+!Fraccion methodsFor: 'dd' stamp: 'EP 10/2/2022 00:16:59'!
+divideAnInteger: anInteger
+
+	^Fraccion with: (self denominator * anInteger value) over: self numerator.! !
+
+
 !Fraccion methodsFor: 'printing' stamp: 'HAW 9/24/2018 08:54:46'!
 printOn: aStream
 
@@ -766,12 +777,12 @@ printOn: aStream
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'EP 10/2/2022 22:03:03'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'EP 10/2/2022 22:31:00'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
 	
-	aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ].
+	aDivisor asADivisor.
 	
 	aDividend isZero ifTrue: [ ^aDividend ].
 	
