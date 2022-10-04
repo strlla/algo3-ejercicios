@@ -74,3 +74,5 @@ Además, evita potenciales contradicciones en las respuestas de las subsclases c
 
 ### No rompas
 ¿Por qué está mal/qué problemas trae romper encapsulamiento?
+
+Al restringir el acceso a los colaboradores a solo la propia clase, reducimos mucho el margen de error y facilita con enormidad la búsqueda de bugs y resultado indeseables ya que se descarta cualquier influencia externa.
