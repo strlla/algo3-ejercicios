@@ -53,18 +53,22 @@ Aquellos que estén interesados en seguir llevando al extremo el reemplazo de if
 
 ### Aporte de los mensajes de DD
 En un double dispatch (DD), ¿qué información aporta cada uno de los dos llamados?
-Aporta información acerca del tipo del enviador y del colaborador.
+
+El primer llamado aporta información acerca del tipo del enviador y el mensaje que requiere del DD y el segundo aporta el tipo del colaborador.
 
 ### Lógica de instanciado
 Con lo que vieron y saben hasta ahora, ¿donde les parece mejor tener la lógica de cómo instanciar un objeto? ¿por qué? ¿Y si se crea ese objeto desde diferentes lugares y de diferentes formas? ¿cómo lo resuelven?
+
 Nos parece que en la clase abstracta porque esta conoce a todas sus subsclases y puede asignar la instancia en la subclase correspondiente sin romper el encapsulamiento. En caso de que se cree en otro lugar, deberia existir un solo mensaje que sea capaz de trabajar con esa instancia, por lo tanto intentariamos utilizar este unico mensaje de instanciación. 
 
 ### Nombres de las categorías de métodos
 Con lo que vieron y trabajaron hasta ahora, ¿qué criterio están usando para categorizar métodos?
+
 Estamos categorizando los metodos segun su función y en base a la similitud de su aplicación.
 
 ### Subclass Responsibility
 Si todas las subclases saben responder un mismo mensaje, ¿por qué ponemos ese mensaje sólo con un “self subclassResponsibility” en la superclase? ¿para qué sirve?
+
 Para advertir que se está instanciando la clase abstracta y que queda bajo la responsabilidad de las subclases responder a ese mensaje.
 Además, evita potenciales contradicciones en las respuestas de las subsclases cuando aun quedan mensajes sin implementar.
 
