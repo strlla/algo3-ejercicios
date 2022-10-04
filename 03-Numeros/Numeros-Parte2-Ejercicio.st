@@ -549,9 +549,9 @@ fibonacci
 	^Entero with: 1.! !
 
 
-!Cero methodsFor: 'dd' stamp: 'EP 10/2/2022 22:29:23'!
-asADivisor
-	self error: Fraccion canNotDivideByZeroErrorDescription ! !
+!Cero methodsFor: 'dd' stamp: 'MN 10/4/2022 18:18:52'!
+asADivisorFor: aDividend
+	^self error: Fraccion canNotDivideByZeroErrorDescription! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -562,6 +562,7 @@ Cero class
 !Cero class methodsFor: 'belonging' stamp: 'EP 10/2/2022 21:52:08'!
 belongsTo: aValue
 	^aValue = 0.! !
+
 
 
 !classDefinition: #EnteroNegativo category: 'Numeros-Parte2-Ejercicio'!
@@ -574,6 +575,11 @@ Entero subclass: #EnteroNegativo
 !EnteroNegativo methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 21:40:47'!
 fibonacci
 	self error: Entero negativeFibonacciErrorDescription.! !
+
+
+!EnteroNegativo methodsFor: 'cc' stamp: 'MN 10/4/2022 18:19:50'!
+asADivisorFor: aDividend
+^aDividend negated / self negated! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -602,6 +608,22 @@ fibonacci
 	
 	^ (self - one) fibonacci + (self - two) fibonacci! !
 
+
+!EnteroPositivo methodsFor: 'cc' stamp: 'MN 10/4/2022 18:27:21'!
+asADivisorFor: aDividend  
+
+| greatestCommonDivisor numerator denominator |
+
+	greatestCommonDivisor := aDividend greatestCommonDivisorWith: self. 
+	
+	numerator := aDividend // greatestCommonDivisor.
+
+	denominator := self // greatestCommonDivisor.
+	
+	denominator isOne ifTrue: [ ^numerator ].
+
+	^Fraccion new initializeWith: numerator over: denominator! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'EnteroPositivo class' category: 'Numeros-Parte2-Ejercicio'!
@@ -623,6 +645,12 @@ Entero subclass: #Uno
 !Uno methodsFor: 'arithmetic operations' stamp: 'EP 10/2/2022 21:54:39'!
 fibonacci
 	^Entero with: 1.! !
+
+
+!Uno methodsFor: 'cc' stamp: 'MN 10/4/2022 18:23:38'!
+asADivisorFor: aDividend
+
+	^aDividend! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -777,24 +805,8 @@ printOn: aStream
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'EP 10/4/2022 16:58:18'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'MN 10/4/2022 18:21:43'!
 with: aDividend over: aDivisor
 
-	| greatestCommonDivisor numerator denominator |
-
-	aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ].
-
-	aDividend isZero ifTrue: [ ^aDividend ].
 	
-	aDivisor isNegative ifTrue:[ ^aDividend negated / aDivisor negated].
-
-	greatestCommonDivisor := aDividend greatestCommonDivisorWith: aDivisor. 
-	
-	numerator := aDividend // greatestCommonDivisor.
-
-	denominator := aDivisor // greatestCommonDivisor.
-	
-	denominator isOne ifTrue: [ ^numerator ].
-
-	^self new initializeWith: numerator over: denominator
-	! !
+	^aDivisor asADivisorFor:aDividend! !
