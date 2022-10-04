@@ -777,21 +777,21 @@ printOn: aStream
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'EP 10/2/2022 22:31:00'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'EP 10/4/2022 16:58:18'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
-	
-	aDivisor asADivisor.
-	
+
+	aDivisor isZero ifTrue: [ self error: self canNotDivideByZeroErrorDescription ].
+
 	aDividend isZero ifTrue: [ ^aDividend ].
 	
 	aDivisor isNegative ifTrue:[ ^aDividend negated / aDivisor negated].
-	
+
 	greatestCommonDivisor := aDividend greatestCommonDivisorWith: aDivisor. 
 	
 	numerator := aDividend // greatestCommonDivisor.
-	
+
 	denominator := aDivisor // greatestCommonDivisor.
 	
 	denominator isOne ifTrue: [ ^numerator ].
