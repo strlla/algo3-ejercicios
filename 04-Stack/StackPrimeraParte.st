@@ -93,10 +93,10 @@ top
 	^stack at: stack size.! !
 
 
-!Stack methodsFor: 'initialization' stamp: 'EP 10/7/2022 19:13:12'!
+!Stack methodsFor: 'initialization' stamp: 'EP 10/10/2022 14:29:14'!
 initialize
-	stack := OrderedCollection new.
-	quantity := 0.! !
+
+	stack := OrderedCollection new! !
 
 
 !Stack methodsFor: 'private' stamp: 'EP 10/7/2022 20:04:47'!
