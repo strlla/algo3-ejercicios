@@ -145,49 +145,56 @@ TestCase subclass: #SentenceFinderByPrefixTest
 
 !classDefinition: #OOStack category: 'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'stack'
+	instanceVariableNames: 'topNode quantity'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
-
-!OOStack methodsFor: 'private' stamp: 'EP 10/10/2022 14:37:44'!
-emptyCheck
-	stack isEmpty ifTrue: [ self errorEmptyStack ].! !
 
 !OOStack methodsFor: 'private' stamp: 'EP 10/10/2022 14:36:18'!
 errorEmptyStack
 	self error: self class stackEmptyErrorDescription.! !
 
-!OOStack methodsFor: 'private' stamp: 'EP 10/10/2022 14:45:54'!
+!OOStack methodsFor: 'private' stamp: 'EP 10/11/2022 21:49:39'!
 initialize
-	stack := OrderedCollection new.
+	quantity := 0.
+	topNode := NullNode new.
 	
 	! !
 
 
-!OOStack methodsFor: 'primitives' stamp: 'EP 10/10/2022 14:31:04'!
+!OOStack methodsFor: 'primitives' stamp: 'EP 10/11/2022 21:24:45'!
 isEmpty
-	^stack isEmpty.! !
+	^(quantity <= 0).! !
 
-!OOStack methodsFor: 'primitives' stamp: 'EP 10/10/2022 14:44:28'!
+!OOStack methodsFor: 'primitives' stamp: 'EP 10/11/2022 21:41:31'!
 pop
-	self emptyCheck.
+	| poppedValue |
 	
-	^stack removeLast.! !
+	poppedValue := topNode value.
+	
+	topNode :=  topNode previousNode. 
 
-!OOStack methodsFor: 'primitives' stamp: 'EP 10/10/2022 14:41:30'!
+	quantity := quantity - 1.
+
+	^poppedValue.! !
+
+!OOStack methodsFor: 'primitives' stamp: 'EP 10/11/2022 21:50:24'!
 push: anElement
-	stack addLast: anElement.! !
-
-!OOStack methodsFor: 'primitives' stamp: 'EP 10/10/2022 14:42:18'!
-size
-	^stack size.! !
-
-!OOStack methodsFor: 'primitives' stamp: 'EP 10/10/2022 14:41:15'!
-top
-	self emptyCheck.
+	| newTop |
 	
-	^stack at: stack size.! !
+	newTop := StackNode withValue: anElement andPrevious: topNode.
+	
+	topNode := newTop.
+	
+	quantity := quantity + 1.! !
+
+!OOStack methodsFor: 'primitives' stamp: 'EP 10/11/2022 21:22:00'!
+size
+	^quantity.! !
+
+!OOStack methodsFor: 'primitives' stamp: 'EP 10/11/2022 21:23:31'!
+top	
+	^topNode value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -207,3 +214,85 @@ Object subclass: #SentenceFinderByPrefix
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+
+!classDefinition: #StackNode category: 'Stack-Exercise'!
+Object subclass: #StackNode
+	instanceVariableNames: 'value previousNode'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!StackNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:49:01'!
+previousNode
+	self subclassResponsibility.! !
+
+!StackNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:49:08'!
+previousNode: aNode
+	self subclassResponsibility.! !
+
+!StackNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:49:15'!
+value
+	self subclassResponsibility.! !
+
+!StackNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:49:18'!
+value: aValue
+	self subclassResponsibility.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'StackNode class' category: 'Stack-Exercise'!
+StackNode class
+	instanceVariableNames: ''!
+
+!StackNode class methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:47:58'!
+withValue: aValue andPrevious: aNode
+	| newNode |
+	newNode := RealNode new.
+	newNode value: aValue.
+	newNode previousNode: aNode.
+	
+	^newNode.
+	
+	! !
+
+
+!classDefinition: #NullNode category: 'Stack-Exercise'!
+StackNode subclass: #NullNode
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!NullNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:44:57'!
+previousNode
+	^self.! !
+
+!NullNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:41:44'!
+value
+	^OOStack error: OOStack stackEmptyErrorDescription.! !
+
+
+!classDefinition: #RealNode category: 'Stack-Exercise'!
+StackNode subclass: #RealNode
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!RealNode methodsFor: 'getters' stamp: 'EP 10/11/2022 21:48:18'!
+previousNode
+	^previousNode.! !
+
+!RealNode methodsFor: 'getters' stamp: 'EP 10/11/2022 21:48:35'!
+value
+	^value.! !
+
+
+!RealNode methodsFor: 'setters' stamp: 'EP 10/11/2022 21:48:24'!
+previousNode: aNode
+	previousNode := aNode.! !
+
+!RealNode methodsFor: 'setters' stamp: 'EP 10/11/2022 21:48:42'!
+value: aValue
+	value := aValue.! !
