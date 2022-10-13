@@ -145,7 +145,7 @@ TestCase subclass: #SentenceFinderByPrefixTest
 
 !classDefinition: #OOStack category: 'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'topNode quantity'
+	instanceVariableNames: 'topElement quantity'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
@@ -154,10 +154,10 @@ Object subclass: #OOStack
 errorEmptyStack
 	self error: self class stackEmptyErrorDescription.! !
 
-!OOStack methodsFor: 'private' stamp: 'EP 10/11/2022 21:49:39'!
+!OOStack methodsFor: 'private' stamp: 'EP 10/13/2022 18:17:12'!
 initialize
 	quantity := 0.
-	topNode := NullNode new.
+	topElement := NullTop new.
 	
 	! !
 
@@ -166,25 +166,25 @@ initialize
 isEmpty
 	^(quantity <= 0).! !
 
-!OOStack methodsFor: 'primitives' stamp: 'EP 10/11/2022 21:41:31'!
+!OOStack methodsFor: 'primitives' stamp: 'EP 10/13/2022 18:17:12'!
 pop
 	| poppedValue |
 	
-	poppedValue := topNode value.
+	poppedValue := topElement value.
 	
-	topNode :=  topNode previousNode. 
+	topElement :=  topElement previousTop. 
 
 	quantity := quantity - 1.
 
 	^poppedValue.! !
 
-!OOStack methodsFor: 'primitives' stamp: 'EP 10/11/2022 21:50:24'!
+!OOStack methodsFor: 'primitives' stamp: 'EP 10/13/2022 18:17:12'!
 push: anElement
 	| newTop |
 	
-	newTop := StackNode withValue: anElement andPrevious: topNode.
+	newTop := StackTop withValue: anElement andPrevious: topElement.
 	
-	topNode := newTop.
+	topElement := newTop.
 	
 	quantity := quantity + 1.! !
 
@@ -192,9 +192,9 @@ push: anElement
 size
 	^quantity.! !
 
-!OOStack methodsFor: 'primitives' stamp: 'EP 10/11/2022 21:23:31'!
+!OOStack methodsFor: 'primitives' stamp: 'EP 10/13/2022 18:17:12'!
 top	
-	^topNode value.! !
+	^topElement value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -210,89 +210,95 @@ stackEmptyErrorDescription
 
 !classDefinition: #SentenceFinderByPrefix category: 'Stack-Exercise'!
 Object subclass: #SentenceFinderByPrefix
-	instanceVariableNames: ''
+	instanceVariableNames: 'stack'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'EP 10/13/2022 18:06:26'!
+find: aPrefix
+	
+	! !
 
 
-!classDefinition: #StackNode category: 'Stack-Exercise'!
-Object subclass: #StackNode
-	instanceVariableNames: 'value previousNode'
+!classDefinition: #StackTop category: 'Stack-Exercise'!
+Object subclass: #StackTop
+	instanceVariableNames: 'value previousTop'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!StackNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:49:01'!
-previousNode
+!StackTop methodsFor: 'setters' stamp: 'EP 10/13/2022 18:13:25'!
+previousTop: aTop
 	self subclassResponsibility.! !
 
-!StackNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:49:08'!
-previousNode: aNode
-	self subclassResponsibility.! !
-
-!StackNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:49:15'!
-value
-	self subclassResponsibility.! !
-
-!StackNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:49:18'!
+!StackTop methodsFor: 'setters' stamp: 'EP 10/11/2022 21:49:18'!
 value: aValue
+	self subclassResponsibility.! !
+
+
+!StackTop methodsFor: 'getters' stamp: 'EP 10/13/2022 18:11:39'!
+previousTop
+	self subclassResponsibility.! !
+
+!StackTop methodsFor: 'getters' stamp: 'EP 10/11/2022 21:49:15'!
+value
 	self subclassResponsibility.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'StackNode class' category: 'Stack-Exercise'!
-StackNode class
+!classDefinition: 'StackTop class' category: 'Stack-Exercise'!
+StackTop class
 	instanceVariableNames: ''!
 
-!StackNode class methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:47:58'!
-withValue: aValue andPrevious: aNode
+!StackTop class methodsFor: 'instatiaton' stamp: 'EP 10/13/2022 18:15:26'!
+withValue: aValue andPrevious: aTop
 	| newNode |
-	newNode := RealNode new.
+	newNode := RealTop new.
 	newNode value: aValue.
-	newNode previousNode: aNode.
+	newNode previousTop: aTop.
 	
 	^newNode.
 	
 	! !
 
 
-!classDefinition: #NullNode category: 'Stack-Exercise'!
-StackNode subclass: #NullNode
+!classDefinition: #NullTop category: 'Stack-Exercise'!
+StackTop subclass: #NullTop
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!NullNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:44:57'!
-previousNode
+!NullTop methodsFor: 'getters' stamp: 'EP 10/13/2022 18:14:34'!
+previousTop
 	^self.! !
 
-!NullNode methodsFor: 'as yet unclassified' stamp: 'EP 10/11/2022 21:41:44'!
+!NullTop methodsFor: 'getters' stamp: 'EP 10/11/2022 21:41:44'!
 value
 	^OOStack error: OOStack stackEmptyErrorDescription.! !
 
 
-!classDefinition: #RealNode category: 'Stack-Exercise'!
-StackNode subclass: #RealNode
+!classDefinition: #RealTop category: 'Stack-Exercise'!
+StackTop subclass: #RealTop
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!RealNode methodsFor: 'getters' stamp: 'EP 10/11/2022 21:48:18'!
-previousNode
-	^previousNode.! !
+!RealTop methodsFor: 'getters' stamp: 'EP 10/13/2022 18:13:09'!
+previousTop
+	^previousTop.! !
 
-!RealNode methodsFor: 'getters' stamp: 'EP 10/11/2022 21:48:35'!
+!RealTop methodsFor: 'getters' stamp: 'EP 10/11/2022 21:48:35'!
 value
 	^value.! !
 
 
-!RealNode methodsFor: 'setters' stamp: 'EP 10/11/2022 21:48:24'!
-previousNode: aNode
-	previousNode := aNode.! !
+!RealTop methodsFor: 'setters' stamp: 'EP 10/13/2022 18:14:57'!
+previousTop: aTop
+	previousTop := aTop.! !
 
-!RealNode methodsFor: 'setters' stamp: 'EP 10/11/2022 21:48:42'!
+!RealTop methodsFor: 'setters' stamp: 'EP 10/11/2022 21:48:42'!
 value: aValue
 	value := aValue.! !
