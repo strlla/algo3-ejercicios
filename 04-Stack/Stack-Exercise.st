@@ -137,10 +137,107 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 
 !classDefinition: #SentenceFinderByPrefixTest category: 'Stack-Exercise'!
 TestCase subclass: #SentenceFinderByPrefixTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'stack sentenceFinder'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'EP 10/14/2022 00:32:17'!
+test01SFFindsAllTheSentencesWithPrefix
+
+	self pushSomePhrases.
+	
+	self assert: ((sentenceFinder find: 'win') size = 2).! !
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'EP 10/14/2022 00:32:37'!
+test02AfterFindingTheSentencesTheStackStaysTheSame
+ 
+	self pushSomePhrases.
+       sentenceFinder find: 'win'.
+	
+	self assert: stack pop equals: 'winning is everything'.
+	self assert: stack pop equals: 'winter is coming'.
+	self assert: stack pop equals: 'The winds of Winter'.
+! !
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'EP 10/13/2022 23:47:04'!
+test03ThePrefixisEmptySoItIsNotValid
+
+	self should: [sentenceFinder find: '' ]
+	      raise: Error
+	      withExceptionDo: [ :anError | self assert: SentenceFinderByPrefix prefixIsNotValidDescription equals: anError messageText.].
+! !
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'EP 10/13/2022 23:58:29'!
+test04ThePrefixHasSpacesSoItIsNotValid
+
+	self pushSomePhrases.
+	self should: [sentenceFinder find: 'winter is' ]
+	      raise: Error
+	      withExceptionDo: [ :anError | self assert: SentenceFinderByPrefix prefixIsNotValidDescription equals: anError messageText.].
+! !
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'EP 10/13/2022 23:58:33'!
+test05NoSentencesMatchWithThePrefix
+
+	self pushSomePhrases.
+	
+	self assert: (sentenceFinder find: 'wat') size equals: 0.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'EP 10/13/2022 23:54:30'!
+test06FinderIsCaseSensitive
+
+	self pushSomePhrases.
+	
+	self assert: (sentenceFinder find: 'The') size equals: 1.
+	self assert: (sentenceFinder find: 'the') size equals: 0.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'EP 10/14/2022 00:04:20'!
+test07FinderChangesAfterPushing
+
+	self pushSomePhrases.
+	
+	self assert: ((sentenceFinder find: 'win') size = 2).
+	
+	self pushSomePhrases.
+	
+	self assert: ((sentenceFinder find: 'win') size = 4).
+! !
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'EP 10/14/2022 00:22:19'!
+test08FinderChangesAfterPopping
+
+	self pushSomePhrases.
+	
+	self assert: ((sentenceFinder find: 'win') size = 2).
+	
+	3 timesRepeat: [stack pop].
+	
+	self assert: ((sentenceFinder find: 'win') size = 0).
+! !
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'EP 10/14/2022 00:20:37'!
+test09FinderOnlySearchsForPrefixesAndNotStrings
+
+	self pushSomePhrases.
+	
+	self assert: ((sentenceFinder find: 'ter') size = 0).! !
+
+
+!SentenceFinderByPrefixTest methodsFor: 'setUp/tearDown' stamp: 'EP 10/13/2022 21:49:48'!
+assertErrorDescriptionEqualsPrefixIsNotValid: anError
+	^self assert: SentenceFinderByPrefix prefixIsNotValidDescription equals: anError messageText.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'setUp/tearDown' stamp: 'EP 10/13/2022 23:26:46'!
+pushSomePhrases
+	stack push: 'The winds of Winter'.
+	stack push: 'winter is coming'.
+	stack push: 'winning is everything'.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'setUp/tearDown' stamp: 'EP 10/13/2022 21:03:00'!
+setUp
+	stack := OOStack new.
+	sentenceFinder := SentenceFinderByPrefix ofAStack: stack.! !
 
 
 !classDefinition: #OOStack category: 'Stack-Exercise'!
@@ -215,10 +312,69 @@ Object subclass: #SentenceFinderByPrefix
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!SentenceFinderByPrefix methodsFor: 'as yet unclassified' stamp: 'EP 10/13/2022 18:06:26'!
+!SentenceFinderByPrefix methodsFor: 'setters' stamp: 'EP 10/13/2022 18:22:05'!
+stack: aStack
+	stack := aStack.! !
+
+
+!SentenceFinderByPrefix methodsFor: 'operations' stamp: 'EP 10/14/2022 00:25:13'!
 find: aPrefix
+	(self prefixIsNotValid: aPrefix) ifTrue: [^self error: self class prefixIsNotValidDescription]. 
 	
-	! !
+	^self findAllSentencesFromStackWithPrefix: aPrefix.! !
+
+
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'EP 10/14/2022 00:37:27'!
+findAllSentencesFromStackWithPrefix: aPrefix
+	| sentencesFound auxStack |  
+		
+	sentencesFound := OrderedCollection new.
+	auxStack := OOStack new.
+	
+	self moveAllElementsFrom: stack into: auxStack 
+	      andForEachApply: [:poppedElement | (poppedElement beginsWith: aPrefix) ifTrue: [sentencesFound add: poppedElement]].
+	
+	self moveAllElementsFrom: auxStack into: stack andForEachApply: [:nothing | ].
+	
+	^sentencesFound.! !
+
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'EP 10/13/2022 21:01:04'!
+moveAllElementsFrom: aStack into: anotherStack andForEachApply: aBlock
+     | poppedElement |
+
+     [aStack isEmpty] whileFalse: [
+    		poppedElement := aStack pop.
+		aBlock value: poppedElement.
+		anotherStack push: poppedElement.
+      ].! !
+
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'EP 10/13/2022 21:56:46'!
+prefixHasSpaces: aPrefix 
+	^((aPrefix findBetweenSubStrs: {' '}) size ~= 1).! !
+
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'EP 10/13/2022 21:57:53'!
+prefixIsNotValid: aPrefix
+	^(aPrefix isEmpty) or: [self prefixHasSpaces: aPrefix]. ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'SentenceFinderByPrefix class' category: 'Stack-Exercise'!
+SentenceFinderByPrefix class
+	instanceVariableNames: ''!
+
+!SentenceFinderByPrefix class methodsFor: 'instatiation' stamp: 'EP 10/13/2022 18:22:34'!
+ofAStack: aStack
+	| newFinder |
+	
+	newFinder := SentenceFinderByPrefix  new.
+	newFinder stack: aStack.
+	
+	^newFinder! !
+
+
+!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'EP 10/13/2022 21:26:55'!
+prefixIsNotValidDescription
+	^'This Prefix is not valid'.! !
 
 
 !classDefinition: #StackTop category: 'Stack-Exercise'!
