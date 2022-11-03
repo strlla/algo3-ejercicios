@@ -82,6 +82,14 @@ rotateLeft
 rotateRight
 	self subclassResponsibility.! !
 
+!CardinalPoints methodsFor: 'public' stamp: 'EP 11/2/2022 23:40:37'!
+whereToMoveBackwards: marsRover
+	self subclassResponsibility.! !
+
+!CardinalPoints methodsFor: 'public' stamp: 'EP 11/2/2022 23:40:44'!
+whereToMoveForward: marsRover
+	self subclassResponsibility.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'CardinalPoints class' category: 'MarsRover'!
@@ -115,6 +123,15 @@ rotateLeft
 rotateRight
 	^South new.! !
 
+!East methodsFor: 'public' stamp: 'EP 11/2/2022 23:37:44'!
+whereToMoveBackwards: marsRover
+	marsRover moveBackwardsFacingEast.	! !
+
+!East methodsFor: 'public' stamp: 'EP 11/2/2022 23:36:07'!
+whereToMoveForward: marsRover
+	marsRover moveForwardFacingEast.
+	! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'East class' category: 'MarsRover'!
@@ -140,6 +157,14 @@ rotateLeft
 !North methodsFor: 'public' stamp: 'EP 10/30/2022 17:42:04'!
 rotateRight
 	^East new.! !
+
+!North methodsFor: 'public' stamp: 'EP 11/2/2022 23:37:59'!
+whereToMoveBackwards: marsRover
+	marsRover moveBackwardsFacingNorth.	! !
+
+!North methodsFor: 'public' stamp: 'EP 11/2/2022 23:36:35'!
+whereToMoveForward: marsRover
+	marsRover moveForwardFacingNorth.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -167,6 +192,14 @@ rotateLeft
 rotateRight
 	^West new.! !
 
+!South methodsFor: 'public' stamp: 'EP 11/2/2022 23:38:09'!
+whereToMoveBackwards: marsRover
+	marsRover moveBackwardsFacingSouth. 	! !
+
+!South methodsFor: 'public' stamp: 'EP 11/2/2022 23:36:47'!
+whereToMoveForward: marsRover
+	marsRover moveForwardFacingSouth.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'South class' category: 'MarsRover'!
@@ -192,6 +225,14 @@ rotateLeft
 !West methodsFor: 'public' stamp: 'EP 10/30/2022 17:43:01'!
 rotateRight
 	^North new.! !
+
+!West methodsFor: 'public' stamp: 'EP 11/2/2022 23:38:16'!
+whereToMoveBackwards: marsRover
+	marsRover moveBackwardsFacingWest.	! !
+
+!West methodsFor: 'public' stamp: 'EP 11/2/2022 23:37:03'!
+whereToMoveForward: marsRover
+	marsRover moveForwardFacingWest.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -220,19 +261,13 @@ executeCommand: aCommand
  
      self error: 'Instruction not valid.'.! !
 
-!MarsRover methodsFor: 'private' stamp: 'EP 11/2/2022 22:02:39'!
+!MarsRover methodsFor: 'private' stamp: 'EP 11/2/2022 23:38:41'!
 moveBackwards
-	(orientation isKindOf: North) ifTrue: [coordinates := coordinates - (0@1)].
-	(orientation isKindOf: South) ifTrue: [coordinates := coordinates + (0@1)].
-	(orientation isKindOf: East) ifTrue: [coordinates := coordinates - (1@0)].
-	(orientation isKindOf: West) ifTrue: [coordinates := coordinates + (1@0)].! !
+	orientation whereToMoveBackwards: self.! !
 
-!MarsRover methodsFor: 'private' stamp: 'EP 10/30/2022 18:20:35'!
+!MarsRover methodsFor: 'private' stamp: 'EP 11/2/2022 23:35:53'!
 moveForward
-	(orientation isKindOf: North) ifTrue: [coordinates := coordinates + (0@1)].
-	(orientation isKindOf: South) ifTrue: [coordinates := coordinates - (0@1)].
-	(orientation isKindOf: East) ifTrue: [coordinates := coordinates + (1@0)].
-	(orientation isKindOf: West) ifTrue: [coordinates := coordinates - (1@0)].! !
+	orientation whereToMoveForward: self.	! !
 
 !MarsRover methodsFor: 'private' stamp: 'EP 10/30/2022 17:49:34'!
 rotateLeft
@@ -252,6 +287,47 @@ receiveInstructions: aSetOfInstructions
      
      aSetOfInstructions isEmpty ifTrue: [ ^self ].
      aSetOfInstructions do: [:aCommand | self executeCommand: aCommand].! !
+
+
+!MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:31:31'!
+moveBackwardsFacingEast
+	coordinates := coordinates + (-1@0).
+	! !
+
+!MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:31:50'!
+moveBackwardsFacingNorth
+	coordinates := coordinates + (0@-1).
+	! !
+
+!MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:31:55'!
+moveBackwardsFacingSouth
+	coordinates := coordinates + (0@1).
+	! !
+
+!MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:31:36'!
+moveBackwardsFacingWest
+	coordinates := coordinates + (1@0).
+	! !
+
+!MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:31:15'!
+moveForwardFacingEast
+	coordinates := coordinates + (1@0).
+	! !
+
+!MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:30:15'!
+moveForwardFacingNorth
+	coordinates := coordinates + (0@1).
+	! !
+
+!MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:30:27'!
+moveForwardFacingSouth
+	coordinates := coordinates + (0@-1).
+	! !
+
+!MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:30:49'!
+moveForwardFacingWest
+	coordinates := coordinates + (-1@0).
+	! !
 
 
 !MarsRover methodsFor: 'initialization' stamp: 'EP 10/30/2022 17:57:59'!
