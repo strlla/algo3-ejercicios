@@ -1,70 +1,48 @@
 !classDefinition: #MarsRoverTest category: 'MarsRover'!
 TestCase subclass: #MarsRoverTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'aMarsRoverFacingNorth'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 10/30/2022 16:30:25'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:43:31'!
 test01MarsRoverDoesNotMoveIfReceivesEmptyCommand
-	| marsRover |
+	aMarsRoverFacingNorth receiveInstructions: ''	.
 	
-	marsRover := MarsRover withCoordinates: 0@0 andOrientation: 'N'.
-	 
-	marsRover receiveInstructions: ''	.
-	
-	self assert: (marsRover isAtPosition: 0@0).! !
+	self assert: (aMarsRoverFacingNorth isAtPosition: 0@0).! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 10/30/2022 16:30:28'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:43:46'!
 test02MarsRoverMovesForwardWhenReceivesCommand
-	| marsRover |
-	
-	marsRover := MarsRover withCoordinates: 0@0 andOrientation: 'N'.
-	 
-	marsRover receiveInstructions: 'f'	.
-	
-	self assert: (marsRover isAtPosition: 0@1).! !
+	aMarsRoverFacingNorth receiveInstructions: 'f'	.
+	self assert: (aMarsRoverFacingNorth isAtPosition: 0@1).! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/2/2022 22:04:46'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:44:07'!
 test03MarsRoverRotatesLeftCorrectly
-	| marsRover |
+	aMarsRoverFacingNorth receiveInstructions: 'lf'	.
 	
-	marsRover := MarsRover withCoordinates: 0@0 andOrientation: 'N'.
-	 
-	marsRover receiveInstructions: 'lf'	.
-	
-	self assert: (marsRover isAtPosition: -1@0).! !
+	self assert: (aMarsRoverFacingNorth isAtPosition: -1@0).! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/2/2022 22:06:52'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:44:18'!
 test04MarsRoverRotatesRightCorrectly
-	| marsRover |
+	aMarsRoverFacingNorth receiveInstructions: 'rf'	.
 	
-	marsRover := MarsRover withCoordinates: 0@0 andOrientation: 'N'.
-	
-	marsRover receiveInstructions: 'rf'	.
-	
-	self assert: (marsRover isAtPosition: 1@0).! !
+	self assert: (aMarsRoverFacingNorth isAtPosition: 1@0).! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/2/2022 22:06:58'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:44:28'!
 test05MarsRoverReturnsToItsInitialPositionAfterMovingForwardAndBackwards
-	| marsRover |
-	
-	marsRover := MarsRover withCoordinates: 0@0 andOrientation: 'N'.
-	 
-	marsRover receiveInstructions: 'ffbb'	.
-	
-	self assert: (marsRover isAtPosition: 0@0).! !
+	aMarsRoverFacingNorth receiveInstructions: 'ffbb'	.
+	self assert: (aMarsRoverFacingNorth isAtPosition: 0@0).! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/2/2022 22:05:37'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:44:45'!
 test06MarsRoverReceivesInvalidCommandAndFails
-	| marsRover |
-	
-	marsRover := MarsRover withCoordinates: 0@0 andOrientation: 'N'.
-	 
-	
-	self should: [ marsRover receiveInstructions: 'ffñbb'	 ]
+	self should: [ aMarsRoverFacingNorth receiveInstructions: 'ffñbb'	 ]
 		raise: Error 
 		withExceptionDo: [ :anError | self assert: anError messageText equals: 'Instruction not valid.'].! !
+
+
+!MarsRoverTest methodsFor: 'setUp' stamp: 'EP 11/3/2022 18:40:06'!
+setUp
+	aMarsRoverFacingNorth := MarsRover withCoordinates: 0@0 andOrientation: 'N'.! !
 
 
 !classDefinition: #CardinalPoints category: 'MarsRover'!
@@ -74,12 +52,12 @@ Object subclass: #CardinalPoints
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!CardinalPoints methodsFor: 'public' stamp: 'EP 10/30/2022 17:41:27'!
-rotateLeft
+!CardinalPoints methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:30'!
+whenRotatingLeft
 	self subclassResponsibility.! !
 
-!CardinalPoints methodsFor: 'public' stamp: 'EP 10/30/2022 17:41:23'!
-rotateRight
+!CardinalPoints methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:53'!
+whenRotatingRight
 	self subclassResponsibility.! !
 
 !CardinalPoints methodsFor: 'public' stamp: 'EP 11/2/2022 23:40:37'!
@@ -115,12 +93,12 @@ CardinalPoints subclass: #East
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!East methodsFor: 'public' stamp: 'EP 10/30/2022 17:52:34'!
-rotateLeft
+!East methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:30'!
+whenRotatingLeft
 	^North new.! !
 
-!East methodsFor: 'public' stamp: 'EP 10/30/2022 17:42:34'!
-rotateRight
+!East methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:53'!
+whenRotatingRight
 	^South new.! !
 
 !East methodsFor: 'public' stamp: 'EP 11/2/2022 23:37:44'!
@@ -150,12 +128,12 @@ CardinalPoints subclass: #North
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!North methodsFor: 'public' stamp: 'EP 10/30/2022 17:52:46'!
-rotateLeft
+!North methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:30'!
+whenRotatingLeft
 	^West new.! !
 
-!North methodsFor: 'public' stamp: 'EP 10/30/2022 17:42:04'!
-rotateRight
+!North methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:53'!
+whenRotatingRight
 	^East new.! !
 
 !North methodsFor: 'public' stamp: 'EP 11/2/2022 23:37:59'!
@@ -184,12 +162,12 @@ CardinalPoints subclass: #South
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!South methodsFor: 'public' stamp: 'EP 10/30/2022 17:51:53'!
-rotateLeft
+!South methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:30'!
+whenRotatingLeft
 	^East new.! !
 
-!South methodsFor: 'public' stamp: 'EP 10/30/2022 17:42:46'!
-rotateRight
+!South methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:53'!
+whenRotatingRight
 	^West new.! !
 
 !South methodsFor: 'public' stamp: 'EP 11/2/2022 23:38:09'!
@@ -218,12 +196,12 @@ CardinalPoints subclass: #West
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!West methodsFor: 'public' stamp: 'EP 10/30/2022 17:52:19'!
-rotateLeft
+!West methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:30'!
+whenRotatingLeft
 	^South new.! !
 
-!West methodsFor: 'public' stamp: 'EP 10/30/2022 17:43:01'!
-rotateRight
+!West methodsFor: 'public' stamp: 'MN 11/3/2022 16:59:53'!
+whenRotatingRight
 	^North new.! !
 
 !West methodsFor: 'public' stamp: 'EP 11/2/2022 23:38:16'!
@@ -252,14 +230,13 @@ Object subclass: #MarsRover
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!MarsRover methodsFor: 'private' stamp: 'EP 11/2/2022 22:02:14'!
-executeCommand: aCommand
-     (aCommand asString = 'f') ifTrue: [^self moveForward].
-     (aCommand asString = 'b') ifTrue: [^self moveBackwards].
-     (aCommand asString = 'l')  ifTrue: [^self rotateLeft].
-     (aCommand asString = 'r') ifTrue: [^self rotateRight].
- 
-     self error: 'Instruction not valid.'.! !
+!MarsRover methodsFor: 'private' stamp: 'MN 11/3/2022 17:17:56'!
+executeCommand: aCommandCode
+	|command|
+	
+	command := MarsRoverCommand ofCode: (aCommandCode asString).
+	
+	command executeIn: self.! !
 
 !MarsRover methodsFor: 'private' stamp: 'EP 11/2/2022 23:38:41'!
 moveBackwards
@@ -269,29 +246,29 @@ moveBackwards
 moveForward
 	orientation whereToMoveForward: self.	! !
 
-!MarsRover methodsFor: 'private' stamp: 'EP 10/30/2022 17:49:34'!
+!MarsRover methodsFor: 'private' stamp: 'MN 11/3/2022 17:18:52'!
 rotateLeft
-	orientation := orientation rotateLeft.! !
+	orientation := orientation whenRotatingLeft.! !
 
-!MarsRover methodsFor: 'private' stamp: 'EP 10/30/2022 17:49:22'!
+!MarsRover methodsFor: 'private' stamp: 'MN 11/3/2022 17:19:01'!
 rotateRight
-	orientation := orientation rotateRight.! !
+	orientation := orientation whenRotatingRight.! !
 
 
 !MarsRover methodsFor: 'public' stamp: 'EP 10/30/2022 16:18:35'!
 isAtPosition: aCoordinate
 	^coordinates = aCoordinate.! !
 
-!MarsRover methodsFor: 'public' stamp: 'EP 10/30/2022 17:31:24'!
+!MarsRover methodsFor: 'public' stamp: 'MN 11/3/2022 17:16:38'!
 receiveInstructions: aSetOfInstructions
      
      aSetOfInstructions isEmpty ifTrue: [ ^self ].
-     aSetOfInstructions do: [:aCommand | self executeCommand: aCommand].! !
+     aSetOfInstructions do: [:aCommandCode | self executeCommand: aCommandCode].! !
 
 
-!MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:31:31'!
+!MarsRover methodsFor: 'dd' stamp: 'MN 11/3/2022 17:29:55'!
 moveBackwardsFacingEast
-	coordinates := coordinates + (-1@0).
+	coordinates := coordinates  - (1@0).
 	! !
 
 !MarsRover methodsFor: 'dd' stamp: 'EP 11/2/2022 23:31:50'!
@@ -345,3 +322,116 @@ MarsRover class
 !MarsRover class methodsFor: 'instance creation' stamp: 'EP 10/30/2022 16:25:57'!
 withCoordinates: someCoordinates andOrientation: anOrientation
 	^self new initializeWithCoordinates: someCoordinates andOrientation: anOrientation.! !
+
+
+!classDefinition: #MarsRoverCommand category: 'MarsRover'!
+Object subclass: #MarsRoverCommand
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover'!
+
+!MarsRoverCommand methodsFor: 'execution' stamp: 'MN 11/3/2022 17:05:20'!
+executeIn: aMarsRover
+	self subclassResponsibility! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MarsRoverCommand class' category: 'MarsRover'!
+MarsRoverCommand class
+	instanceVariableNames: ''!
+
+!MarsRoverCommand class methodsFor: 'instance creation' stamp: 'MN 11/3/2022 17:12:24'!
+ofCode: anIdentifiyingCode
+
+	self subclasses detect:[:aCommandSubclass | aCommandSubclass code = anIdentifiyingCode ]
+	ifFound:[:aCommandSubclass | ^aCommandSubclass new.] 
+	ifNone:[MarsRover error: 'Instruction not valid.'].! !
+
+
+!classDefinition: #MoveBackwards category: 'MarsRover'!
+MarsRoverCommand subclass: #MoveBackwards
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover'!
+
+!MoveBackwards methodsFor: 'execution' stamp: 'MN 11/3/2022 17:04:36'!
+executeIn: aMarsRover
+	aMarsRover moveBackwards ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MoveBackwards class' category: 'MarsRover'!
+MoveBackwards class
+	instanceVariableNames: ''!
+
+!MoveBackwards class methodsFor: 'identification' stamp: 'MN 11/3/2022 17:10:19'!
+code
+	^'b'! !
+
+
+!classDefinition: #MoveForward category: 'MarsRover'!
+MarsRoverCommand subclass: #MoveForward
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover'!
+
+!MoveForward methodsFor: 'execution' stamp: 'MN 11/3/2022 17:04:13'!
+executeIn: aMarsRover
+	aMarsRover moveForward! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MoveForward class' category: 'MarsRover'!
+MoveForward class
+	instanceVariableNames: ''!
+
+!MoveForward class methodsFor: 'identification' stamp: 'MN 11/3/2022 17:10:26'!
+code
+	^'f'! !
+
+
+!classDefinition: #RotateLeft category: 'MarsRover'!
+MarsRoverCommand subclass: #RotateLeft
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover'!
+
+!RotateLeft methodsFor: 'execution' stamp: 'MN 11/3/2022 17:31:01'!
+executeIn: aMarsRover
+	aMarsRover rotateLeft. ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'RotateLeft class' category: 'MarsRover'!
+RotateLeft class
+	instanceVariableNames: ''!
+
+!RotateLeft class methodsFor: 'identification' stamp: 'MN 11/3/2022 17:10:38'!
+code
+	^'l'! !
+
+
+!classDefinition: #RotateRight category: 'MarsRover'!
+MarsRoverCommand subclass: #RotateRight
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'MarsRover'!
+
+!RotateRight methodsFor: 'execution' stamp: 'MN 11/3/2022 17:30:55'!
+executeIn: aMarsRover
+	aMarsRover rotateRight.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'RotateRight class' category: 'MarsRover'!
+RotateRight class
+	instanceVariableNames: ''!
+
+!RotateRight class methodsFor: 'identification' stamp: 'MN 11/3/2022 17:10:44'!
+code
+	^'r'! !
