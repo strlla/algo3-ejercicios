@@ -5,33 +5,30 @@ TestCase subclass: #MarsRoverTest
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:43:31'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/4/2022 14:24:18'!
 test01MarsRoverDoesNotMoveIfReceivesEmptyCommand
-	aMarsRoverFacingNorth receiveInstructions: ''	.
-	
-	self assert: (aMarsRoverFacingNorth isAtPosition: 0@0).! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:43:46'!
+	self assertRoverReceivingCommands: '' isAtPosition: 0@0 andFacing: North.! !
+
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/4/2022 14:24:42'!
 test02MarsRoverMovesForwardWhenReceivesCommand
-	aMarsRoverFacingNorth receiveInstructions: 'f'	.
-	self assert: (aMarsRoverFacingNorth isAtPosition: 0@1).! !
+	
+	self assertRoverReceivingCommands: 'f' isAtPosition: 0@1 andFacing: North.! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:44:07'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/4/2022 14:25:19'!
 test03MarsRoverRotatesLeftCorrectly
-	aMarsRoverFacingNorth receiveInstructions: 'lf'	.
-	
-	self assert: (aMarsRoverFacingNorth isAtPosition: -1@0).! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:44:18'!
+	self assertRoverReceivingCommands: 'lf' isAtPosition: -1@0 andFacing: West.! !
+
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/4/2022 14:25:32'!
 test04MarsRoverRotatesRightCorrectly
-	aMarsRoverFacingNorth receiveInstructions: 'rf'	.
-	
-	self assert: (aMarsRoverFacingNorth isAtPosition: 1@0).! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:44:28'!
+	self assertRoverReceivingCommands: 'rf' isAtPosition: 1@0 andFacing: East.! !
+
+!MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/4/2022 14:25:44'!
 test05MarsRoverReturnsToItsInitialPositionAfterMovingForwardAndBackwards
-	aMarsRoverFacingNorth receiveInstructions: 'ffbb'	.
-	self assert: (aMarsRoverFacingNorth isAtPosition: 0@0).! !
+
+	self assertRoverReceivingCommands: 'ffbb' isAtPosition: 0@0 andFacing: North.! !
 
 !MarsRoverTest methodsFor: 'testing' stamp: 'EP 11/3/2022 18:44:45'!
 test06MarsRoverReceivesInvalidCommandAndFails
@@ -43,6 +40,15 @@ test06MarsRoverReceivesInvalidCommandAndFails
 !MarsRoverTest methodsFor: 'setUp' stamp: 'EP 11/3/2022 18:40:06'!
 setUp
 	aMarsRoverFacingNorth := MarsRover withCoordinates: 0@0 andOrientation: 'N'.! !
+
+
+!MarsRoverTest methodsFor: 'asserts' stamp: 'EP 11/4/2022 14:21:34'!
+assertRoverReceivingCommands: aCommand isAtPosition: aPosition andFacing: anOrientation
+
+	aMarsRoverFacingNorth receiveInstructions: aCommand	.
+	
+	self assert: (aMarsRoverFacingNorth isAtPosition: aPosition).
+	self assert: (aMarsRoverFacingNorth isFacing: anOrientation).! !
 
 
 !classDefinition: #CardinalPoints category: 'MarsRover'!
@@ -258,6 +264,11 @@ rotateRight
 !MarsRover methodsFor: 'public' stamp: 'EP 10/30/2022 16:18:35'!
 isAtPosition: aCoordinate
 	^coordinates = aCoordinate.! !
+
+!MarsRover methodsFor: 'public' stamp: 'EP 11/4/2022 14:24:13'!
+isFacing: anOrientation
+
+	^orientation isKindOf: anOrientation.! !
 
 !MarsRover methodsFor: 'public' stamp: 'MN 11/3/2022 17:16:38'!
 receiveInstructions: aSetOfInstructions
