@@ -89,6 +89,66 @@ test07AccountKnowsItsTransactions
 ! !
 
 
+!classDefinition: #TransferTest category: 'ServiciosFinancieros-Ejercicio'!
+TestCase subclass: #TransferTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!TransferTest methodsFor: 'test' stamp: 'EP 11/7/2022 22:02:57'!
+test01AccountsBalanceUpdatesWhenATransferOccurs
+	| transfer depositAccount  withdrawalAccount |
+	
+	depositAccount := ReceptiveAccount new.
+	withdrawalAccount := ReceptiveAccount new.
+	
+	transfer := Transfer forValue: 100 * peso from: withdrawalAccount to: depositAccount.
+	
+	
+	
+	self assert: -100 * peso equals: (withdrawalAccount balance).
+	self assert: 100 * peso equals: (depositAccount balance).
+
+	
+	! !
+
+!TransferTest methodsFor: 'test' stamp: 'EP 11/8/2022 00:18:21'!
+test02ATransferLegCanAccessItsOppositeLeg
+
+	| depositAccount  withdrawalAccount |
+	
+	depositAccount := ReceptiveAccount new.
+	withdrawalAccount := ReceptiveAccount new.
+	
+	Transfer forValue: 100 * peso from: withdrawalAccount to: depositAccount.
+	self assert: (withdrawalAccount transactions at: 1) oppositeLeg equals: (depositAccount transactions at: 1).
+
+	! !
+
+!TransferTest methodsFor: 'test' stamp: 'EP 11/8/2022 00:21:42'!
+test03CannotTransfer0Pesos
+	| depositAccount  withdrawalAccount |
+	
+	depositAccount := ReceptiveAccount new.
+	withdrawalAccount := ReceptiveAccount new.
+
+	self should: [Transfer forValue: 0 * peso from: withdrawalAccount to: depositAccount.]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: 'Cannot transfer an empty amount.']! !
+
+!TransferTest methodsFor: 'test' stamp: 'EP 11/8/2022 00:24:00'!
+test04CannotTransferNegativePesos
+	| depositAccount  withdrawalAccount |
+	
+	depositAccount := ReceptiveAccount new.
+	withdrawalAccount := ReceptiveAccount new.
+
+	self should: [Transfer forValue: -100 * peso from: withdrawalAccount to: depositAccount.]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: 'Cannot transfer a negative amount.']! !
+
+
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #AccountTransaction
 	instanceVariableNames: ''
@@ -100,6 +160,10 @@ Object subclass: #AccountTransaction
 value 
 
 	self subclassResponsibility ! !
+
+!AccountTransaction methodsFor: 'value' stamp: 'EP 11/7/2022 21:37:18'!
+valueForBalance
+	self subclassResponsibility.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -136,6 +200,10 @@ value
 
 	^ value! !
 
+!Deposit methodsFor: 'value' stamp: 'EP 11/7/2022 21:37:33'!
+valueForBalance
+	^value.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Deposit class' category: 'ServiciosFinancieros-Ejercicio'!
@@ -166,6 +234,10 @@ value
 
 	^ value! !
 
+!Withdraw methodsFor: 'value' stamp: 'EP 11/7/2022 21:39:27'!
+valueForBalance
+	^value * -1.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Withdraw class' category: 'ServiciosFinancieros-Ejercicio'!
@@ -191,10 +263,10 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'HAW 5/23/2019 15:19:32'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'EP 11/7/2022 21:34:55'!
 balance
 
-	^transactions sum: [ :aTransaction | aTransaction value ] ifEmpty: [ 0 ]! !
+	^transactions sum: [ :aTransaction | aTransaction valueForBalance  ] ifEmpty: [ 0 ]! !
 
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'NR 10/17/2019 03:28:43'!
 hasRegistered: aTransaction
@@ -212,3 +284,84 @@ register: aTransaction
 transactions 
 
 	^ transactions copy! !
+
+
+!classDefinition: #Transfer category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #Transfer
+	instanceVariableNames: 'value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!Transfer methodsFor: 'initialization' stamp: 'EP 11/8/2022 00:28:16'!
+initializeFor: aValue from: aWithdrawalAccount to: aDepositAccount
+	| depositLeg withdrawLeg |
+	 	
+	depositLeg := TransferLeg withTransaction: (Deposit for: aValue)		.
+	withdrawLeg := TransferLeg withTransaction: (Withdraw for: aValue).
+	
+	withdrawLeg setOppositeLeg: depositLeg.
+	depositLeg setOppositeLeg: withdrawLeg.	
+	
+	aWithdrawalAccount register: withdrawLeg.
+	aDepositAccount register: depositLeg.
+	
+		
+	! !
+
+
+!Transfer methodsFor: 'value' stamp: 'EP 11/7/2022 21:30:05'!
+value
+
+	^ value! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Transfer class' category: 'ServiciosFinancieros-Ejercicio'!
+Transfer class
+	instanceVariableNames: ''!
+
+!Transfer class methodsFor: 'as yet unclassified' stamp: 'EP 11/8/2022 00:25:12'!
+forValue: aValue from: aWithdrawalAccount to: aDepositAccount
+	
+	aValue = 0 ifTrue: [self error:  'Cannot transfer an empty amount.'].
+	aValue < 0 ifTrue: [self error:  'Cannot transfer a negative amount.'].
+	
+	^self new initializeFor: aValue  from: aWithdrawalAccount to: aDepositAccount.! !
+
+
+!classDefinition: #TransferLeg category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #TransferLeg
+	instanceVariableNames: 'transaction oppositeLeg'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!TransferLeg methodsFor: 'initialization' stamp: 'EP 11/8/2022 00:08:09'!
+initializeWithTransaction: aTransaction
+	transaction := aTransaction.! !
+
+
+!TransferLeg methodsFor: 'getters' stamp: 'EP 11/8/2022 00:02:46'!
+oppositeLeg
+	^oppositeLeg! !
+
+
+!TransferLeg methodsFor: 'value' stamp: 'EP 11/8/2022 00:11:13'!
+valueForBalance
+	^transaction valueForBalance. ! !
+
+
+!TransferLeg methodsFor: 'setters' stamp: 'EP 11/8/2022 00:02:57'!
+setOppositeLeg: aTransferLeg
+	oppositeLeg := aTransferLeg.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferLeg class' category: 'ServiciosFinancieros-Ejercicio'!
+TransferLeg class
+	instanceVariableNames: ''!
+
+!TransferLeg class methodsFor: 'instance creation' stamp: 'EP 11/8/2022 00:08:09'!
+withTransaction: aTransaction
+	^self new initializeWithTransaction: aTransaction.! !
