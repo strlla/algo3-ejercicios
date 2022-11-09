@@ -1,3 +1,41 @@
+!classDefinition: #PortfolioTest category: 'ServiciosFinancieros-Ejercicio'!
+TestCase subclass: #PortfolioTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 17:52:02'!
+test01APortfolioWithAccountsCanCalculateItsBalance
+	|portfolio account|
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	Deposit register: 100 * peso on: account.
+	portfolio register: account.
+	self assert: portfolio balance equals: 100 * peso.! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 17:56:46'!
+test02APortfolioWithOtherPortfoliosCalculatesItsBalanceCorrectly
+	|portfolio1 portfolio2 account|
+	portfolio1 := Portfolio new.
+	portfolio2 := Portfolio new.
+	account := ReceptiveAccount new.
+	Deposit register: 100 * peso on: account.
+	portfolio1 register: account.
+	portfolio2 register: portfolio1.
+	self assert: portfolio2 balance equals: 100 * peso.! !
+
+!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 18:21:37'!
+test03APortfolioKnowsIfItHasRegisteredATransaction
+	|portfolio deposit account|
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	deposit := Deposit for: 100 * peso.
+	account register: deposit.
+	portfolio register: account.
+	self assert: (portfolio hasRegistered: deposit).! !
+
+
 !classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancieros-Ejercicio'!
 TestCase subclass: #ReceptiveAccountTest
 	instanceVariableNames: ''
@@ -113,16 +151,16 @@ test01AccountsBalanceUpdatesWhenATransferOccurs
 	
 	! !
 
-!TransferTest methodsFor: 'test' stamp: 'EP 11/8/2022 00:18:21'!
+!TransferTest methodsFor: 'test' stamp: 'A 11/8/2022 17:26:59'!
 test02ATransferLegCanAccessItsOppositeLeg
 
-	| depositAccount  withdrawalAccount |
+	| depositAccount  withdrawalAccount transfer |
 	
 	depositAccount := ReceptiveAccount new.
 	withdrawalAccount := ReceptiveAccount new.
 	
-	Transfer forValue: 100 * peso from: withdrawalAccount to: depositAccount.
-	self assert: (withdrawalAccount transactions at: 1) oppositeLeg equals: (depositAccount transactions at: 1).
+	transfer := Transfer forValue: 100 * peso from: withdrawalAccount to: depositAccount.
+	self assert: transfer depositLeg oppositeLeg equals: transfer witdrawLeg 
 
 	! !
 
@@ -250,6 +288,33 @@ for: aValue
 	^ self new initializeFor: aValue ! !
 
 
+!classDefinition: #Portfolio category: 'ServiciosFinancieros-Ejercicio'!
+Object subclass: #Portfolio
+	instanceVariableNames: 'members'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!Portfolio methodsFor: 'public' stamp: 'A 11/8/2022 18:26:18'!
+hasRegistered: aTransaction
+	^members anySatisfy:[:aMember | aMember hasRegistered: aTransaction].! !
+
+!Portfolio methodsFor: 'public' stamp: 'A 11/8/2022 17:46:51'!
+register: aReceptiveAccount 
+	
+	members add: aReceptiveAccount. ! !
+
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 17:49:01'!
+balance
+
+	^members sum: [ :aMember | aMember balance  ] ifEmpty: [ 0 ]! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 17:47:34'!
+initialize
+	members := OrderedCollection new.! !
+
+
 !classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #ReceptiveAccount
 	instanceVariableNames: 'transactions'
@@ -288,14 +353,13 @@ transactions
 
 !classDefinition: #Transfer category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #Transfer
-	instanceVariableNames: 'value'
+	instanceVariableNames: 'value depositLeg withdrawLeg'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Transfer methodsFor: 'initialization' stamp: 'EP 11/8/2022 00:28:16'!
+!Transfer methodsFor: 'initialization' stamp: 'A 11/8/2022 17:22:19'!
 initializeFor: aValue from: aWithdrawalAccount to: aDepositAccount
-	| depositLeg withdrawLeg |
 	 	
 	depositLeg := TransferLeg withTransaction: (Deposit for: aValue)		.
 	withdrawLeg := TransferLeg withTransaction: (Withdraw for: aValue).
@@ -310,10 +374,18 @@ initializeFor: aValue from: aWithdrawalAccount to: aDepositAccount
 	! !
 
 
+!Transfer methodsFor: 'value' stamp: 'A 11/8/2022 17:24:13'!
+depositLeg
+	^depositLeg! !
+
 !Transfer methodsFor: 'value' stamp: 'EP 11/7/2022 21:30:05'!
 value
 
 	^ value! !
+
+!Transfer methodsFor: 'value' stamp: 'A 11/8/2022 17:24:50'!
+witdrawLeg
+	^withdrawLeg! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
