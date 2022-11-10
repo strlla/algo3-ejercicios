@@ -5,7 +5,7 @@ TestCase subclass: #PortfolioTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 17:52:02'!
+!PortfolioTest methodsFor: 'tests' stamp: 'A 11/8/2022 17:52:02'!
 test01APortfolioWithAccountsCanCalculateItsBalance
 	|portfolio account|
 	portfolio := Portfolio new.
@@ -14,7 +14,7 @@ test01APortfolioWithAccountsCanCalculateItsBalance
 	portfolio register: account.
 	self assert: portfolio balance equals: 100 * peso.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 17:56:46'!
+!PortfolioTest methodsFor: 'tests' stamp: 'A 11/8/2022 17:56:46'!
 test02APortfolioWithOtherPortfoliosCalculatesItsBalanceCorrectly
 	|portfolio1 portfolio2 account|
 	portfolio1 := Portfolio new.
@@ -25,7 +25,7 @@ test02APortfolioWithOtherPortfoliosCalculatesItsBalanceCorrectly
 	portfolio2 register: portfolio1.
 	self assert: portfolio2 balance equals: 100 * peso.! !
 
-!PortfolioTest methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 18:21:37'!
+!PortfolioTest methodsFor: 'tests' stamp: 'A 11/8/2022 18:21:37'!
 test03APortfolioKnowsIfItHasRegisteredATransaction
 	|portfolio deposit account|
 	portfolio := Portfolio new.
@@ -34,6 +34,125 @@ test03APortfolioKnowsIfItHasRegisteredATransaction
 	account register: deposit.
 	portfolio register: account.
 	self assert: (portfolio hasRegistered: deposit).! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'EP 11/9/2022 22:30:46'!
+test04PortfolioKnowsTransactionsOfOneOfItsAccounts
+
+	|portfolio deposit account|
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+	deposit := Deposit for: 100 * peso.
+	account register: deposit.
+	portfolio register: account.
+	self assert: (portfolio transactions anySatisfy: [:aTransaction | aTransaction = deposit]).
+! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'EP 11/9/2022 22:37:37'!
+test05PortfolioWithOtherPortfoliosCanStillFindItsTransactions
+
+	|portfolio1 portfolio2 deposit account|
+	portfolio1 := Portfolio new.
+	portfolio2 := Portfolio new.
+	
+	account := ReceptiveAccount new.
+	deposit := Deposit for: 100 * peso.
+	account register: deposit.
+	portfolio1 register: account.
+	
+	portfolio2 register: portfolio1.
+	
+	self assert: (portfolio2 transactions anySatisfy: [:aTransaction | aTransaction = deposit]).
+! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'EP 11/9/2022 22:39:49'!
+test06APortfolioWithOtherPortfoliosKnowsIfItHasRegisteredATransaction
+
+	|portfolio1 portfolio2 deposit account|
+	portfolio1 := Portfolio new.
+	portfolio2 := Portfolio new.
+	
+	account := ReceptiveAccount new.
+	deposit := Deposit for: 100 * peso.
+	
+	account register: deposit.
+	
+	portfolio1 register: account.
+	portfolio2 register: portfolio1.
+	self assert: (portfolio2 hasRegistered: deposit).! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'EP 11/9/2022 22:52:14'!
+test07CannotRegisterAnAccountInAPortfolioTwice
+
+	|portfolio account|
+
+	portfolio := Portfolio new.
+	account := ReceptiveAccount new.
+
+	portfolio register: account.
+	
+	self should: [portfolio register: account]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: 'This account is already registered in the portfolio.'].! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'EP 11/9/2022 22:53:24'!
+test08CannotRegisterAnAccountInAPortfolioThatsAlreadyRegistered
+
+	|portfolio1 portfolio2 account|
+
+	portfolio1 := Portfolio new.
+	portfolio2 := Portfolio new.
+	account := ReceptiveAccount new.
+
+	portfolio1 register: account.
+	portfolio2 register: portfolio1.
+	 
+	self should: [portfolio2 register: account]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: 'This account is already registered in the portfolio.'].! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'EP 11/9/2022 22:59:38'!
+test09APortfolioCannotRegisterItself
+
+	| portfolio |
+
+	portfolio := Portfolio new.
+		 
+	self should: [portfolio register: portfolio]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: 'A portfolio cannot register itself.'].! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'EP 11/10/2022 00:20:26'!
+test10CannotAddAccountWhenItIsRegisteredInAFatherPortfolio
+
+	| portfolio1  portfolio2 account |
+
+	portfolio1 := Portfolio new.
+	portfolio2:= Portfolio new.
+	
+	account := ReceptiveAccount new.
+	portfolio1 register: account.
+	
+	portfolio1 register: portfolio2.
+	
+	self should: [portfolio2 register: account]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: 'This account is already registered in a parent portfolio.'].! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'EP 11/10/2022 00:33:10'!
+test11CannotRegisterAPortfolioIfItIncludesAnAlreadyRegisteredAccount
+
+	| portfolio1  portfolio2 account |
+
+	portfolio1 := Portfolio new.
+	portfolio2:= Portfolio new.
+	
+	account := ReceptiveAccount new.
+	portfolio1 register: account.
+	portfolio2 register: account.
+	
+	self should: [portfolio2 register: portfolio1.]
+	raise: Error
+	withExceptionDo: [:anError | self assert: anError messageText equals: 'This portfolio has already registered some of those accounts.'].! !
 
 
 !classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancieros-Ejercicio'!
@@ -290,27 +409,56 @@ for: aValue
 
 !classDefinition: #Portfolio category: 'ServiciosFinancieros-Ejercicio'!
 Object subclass: #Portfolio
-	instanceVariableNames: 'members'
+	instanceVariableNames: 'members parent'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!Portfolio methodsFor: 'public' stamp: 'A 11/8/2022 18:26:18'!
-hasRegistered: aTransaction
-	^members anySatisfy:[:aMember | aMember hasRegistered: aTransaction].! !
+!Portfolio methodsFor: 'public' stamp: 'EP 11/10/2022 00:16:21'!
+addParent: aPortfolio
+	parent := aPortfolio.! !
 
-!Portfolio methodsFor: 'public' stamp: 'A 11/8/2022 17:46:51'!
-register: aReceptiveAccount 
-	
-	members add: aReceptiveAccount. ! !
-
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 17:49:01'!
+!Portfolio methodsFor: 'public' stamp: 'A 11/8/2022 17:49:01'!
 balance
 
 	^members sum: [ :aMember | aMember balance  ] ifEmpty: [ 0 ]! !
 
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'A 11/8/2022 17:47:34'!
+!Portfolio methodsFor: 'public' stamp: 'EP 11/10/2022 00:10:34'!
+hasRegistered: aData
+
+	^(members includes: aData) or: [members anySatisfy: [:aMember | aMember hasRegistered: aData]].! !
+
+!Portfolio methodsFor: 'public' stamp: 'EP 11/10/2022 00:36:50'!
+register: aMember 
+	(aMember = self) ifTrue: [self error: 'A portfolio cannot register itself.'].
+	(parent ~= nil) ifTrue: [(parent hasRegistered: aMember) 
+		ifTrue: [self error: 'This account is already registered in a parent portfolio.'].
+	].
+	(self hasRegistered: aMember) ifTrue: [self error: 'This account is already registered in the portfolio.'].
+	
+	(members anySatisfy: [:aRegisteredMember | aMember hasRegistered: aRegisteredMember])
+	ifTrue: [self error: 'This portfolio has already registered some of those accounts.'].
+	
+	(members anySatisfy: [:anotherMember | anotherMember hasRegistered: aMember]) 
+	ifTrue: [self error: 'This account is already registered in the portfolio.'].
+	
+	members add: aMember. 
+	
+	(aMember isKindOf: Portfolio) ifTrue: [aMember addParent: self.].
+! !
+
+!Portfolio methodsFor: 'public' stamp: 'EP 11/9/2022 22:25:42'!
+transactions
+	| membersTransactions |
+	
+	membersTransactions := OrderedCollection new.
+	
+	members do: [:aMember | membersTransactions addAll: aMember transactions ] .
+	
+	^membersTransactions.! !
+
+
+!Portfolio methodsFor: 'intialization' stamp: 'EP 11/10/2022 00:23:07'!
 initialize
 	members := OrderedCollection new.! !
 
