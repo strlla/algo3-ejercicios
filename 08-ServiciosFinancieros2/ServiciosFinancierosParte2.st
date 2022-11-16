@@ -383,6 +383,76 @@ test07AccountKnowsItsTransactions
 ! !
 
 
+!classDefinition: #TransferNetTest category: 'ServiciosFinancieros-Solucion'!
+TestCase subclass: #TransferNetTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Solucion'!
+
+!TransferNetTest methodsFor: 'tests' stamp: 'EP 11/15/2022 22:13:44'!
+test01TheNetIsZeroWhenTheAccountHasNoTransfers
+     | anAccount aTransferNetReport |
+ 
+    anAccount := ReceptiveAccount new.
+    aTransferNetReport := TransferNetReport for: anAccount.
+ 
+    self assert: aTransferNetReport result equals: 0 * peso.! !
+
+!TransferNetTest methodsFor: 'tests' stamp: 'EP 11/15/2022 22:13:44'!
+test02TransfersAffectTheTransferNet
+    | senderAccount receiverAccount aTransferNetReport |
+ 
+    senderAccount := ReceptiveAccount new.	
+    receiverAccount := ReceptiveAccount new.
+	
+    Deposit register: 100 * peso on: senderAccount.
+
+    Transfer amount: 20 * peso from: senderAccount to: receiverAccount.
+
+    aTransferNetReport := TransferNetReport for: receiverAccount. 
+
+    self assert: aTransferNetReport result equals: 20 * peso.
+
+! !
+
+!TransferNetTest methodsFor: 'tests' stamp: 'EP 11/15/2022 22:13:44'!
+test03OnlyTransfersAffectTheTransferNet
+    | senderAccount receiverAccount aTransferNetReport |
+ 
+    senderAccount := ReceptiveAccount new.	
+    receiverAccount := ReceptiveAccount new.
+	
+    Deposit register: 100 * peso on: senderAccount.
+
+    Transfer amount: 20 * peso from: senderAccount to: receiverAccount.
+
+    aTransferNetReport := TransferNetReport for: senderAccount. 
+
+    self assert: aTransferNetReport result equals: -20 * peso.
+
+! !
+
+!TransferNetTest methodsFor: 'tests' stamp: 'EP 11/15/2022 22:13:44'!
+test04SeveralTransfersAffectTheTransferNet
+    | anAccount anotherAccount aTransferNetReport |
+ 
+    anAccount := ReceptiveAccount new.	
+    anotherAccount := ReceptiveAccount new.
+	
+    Deposit register: 100 * peso on: anAccount.
+    Deposit register: 100 * peso on: anotherAccount.
+
+    Transfer amount: 20 * peso from: anAccount to: anotherAccount.
+    Transfer amount: 30 * peso from: anotherAccount to: anAccount.
+
+    aTransferNetReport := TransferNetReport for: anAccount. 
+
+    self assert: aTransferNetReport result equals: 10 * peso.
+
+! !
+
+
 !classDefinition: #TransferTest category: 'ServiciosFinancieros-Solucion'!
 TestCase subclass: #TransferTest
 	instanceVariableNames: ''
@@ -494,10 +564,10 @@ Object subclass: #Account
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Solucion'!
 
-!Account methodsFor: 'main protocol' stamp: 'EP 11/14/2022 21:47:49'!
+!Account methodsFor: 'main protocol' stamp: 'EP 11/15/2022 22:13:56'!
 accountSummary
 	| summary |
-	summary := AccountSummary for: self.
+	summary := AccountSummaryReport for: self.
 			
 	^summary reportText.! !
 
@@ -739,8 +809,8 @@ value
 	self subclassResponsibility ! !
 
 
-!AccountTransaction methodsFor: 'dd' stamp: 'EP 11/14/2022 21:36:17'!
-beAddedToAReport: anAccountSummary
+!AccountTransaction methodsFor: 'dd' stamp: 'EP 11/15/2022 22:11:53'!
+beAddedToAReport: aReport
 	self subclassResponsibility. ! !
 
 
@@ -775,9 +845,9 @@ affectBalance: aBalance
 	^aBalance + value ! !
 
 
-!Deposit methodsFor: 'dd' stamp: 'EP 11/14/2022 21:36:17'!
-beAddedToAReport: anAccountSummary
-	anAccountSummary addADeposit: self. ! !
+!Deposit methodsFor: 'dd' stamp: 'EP 11/15/2022 22:12:00'!
+beAddedToAReport: aReport
+	aReport addADeposit: self. ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -821,8 +891,8 @@ initializeWith: aTransfer
 	transfer := aTransfer! !
 
 
-!TransferLeg methodsFor: 'dd' stamp: 'EP 11/14/2022 21:36:17'!
-beAddedToAReport: anAccountSummary
+!TransferLeg methodsFor: 'dd' stamp: 'EP 11/15/2022 22:12:03'!
+beAddedToAReport: aReport
 	self subclassResponsibility. ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -861,9 +931,9 @@ affectBalance: aBalance
 	^aBalance + self value! !
 
 
-!TransferDepositLeg methodsFor: 'value' stamp: 'EP 11/14/2022 21:36:17'!
-beAddedToAReport: anAccountSummary
-	anAccountSummary addATransferDepositLeg: self.! !
+!TransferDepositLeg methodsFor: 'value' stamp: 'EP 11/15/2022 22:12:10'!
+beAddedToAReport: aReport
+	aReport addATransferDepositLeg: self.! !
 
 
 !classDefinition: #TransferWithdrawLeg category: 'ServiciosFinancieros-Solucion'!
@@ -884,9 +954,9 @@ affectBalance: aBalance
 
 	^aBalance - self value! !
 
-!TransferWithdrawLeg methodsFor: 'balance' stamp: 'EP 11/14/2022 21:36:17'!
-beAddedToAReport: anAccountSummary
-	anAccountSummary addATransferWithdrawLeg: self.! !
+!TransferWithdrawLeg methodsFor: 'balance' stamp: 'EP 11/15/2022 22:12:16'!
+beAddedToAReport: aReport
+	aReport addATransferWithdrawLeg: self.! !
 
 
 !classDefinition: #Withdraw category: 'ServiciosFinancieros-Solucion'!
@@ -914,9 +984,9 @@ affectBalance: aBalance
 	^aBalance - value! !
 
 
-!Withdraw methodsFor: 'dd' stamp: 'EP 11/14/2022 21:36:17'!
-beAddedToAReport: anAccountSummary
-	anAccountSummary addAWithdraw: self.! !
+!Withdraw methodsFor: 'dd' stamp: 'EP 11/15/2022 22:12:27'!
+beAddedToAReport: aReport
+	aReport addAWithdraw: self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -974,14 +1044,14 @@ ofKind: aTypeOfReport for: anAccount
 	selectedSubclass  new initializeWith: anAccount. ! !
 
 
-!classDefinition: #AccountSummary category: 'ServiciosFinancieros-Solucion'!
-Report subclass: #AccountSummary
+!classDefinition: #AccountSummaryReport category: 'ServiciosFinancieros-Solucion'!
+Report subclass: #AccountSummaryReport
 	instanceVariableNames: 'summary'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Solucion'!
 
-!AccountSummary methodsFor: 'initialization' stamp: 'EP 11/14/2022 21:09:01'!
+!AccountSummaryReport methodsFor: 'initialization' stamp: 'EP 11/14/2022 21:09:01'!
 initializeWith: anAccount
 	account := anAccount.
 	summary := ''.
@@ -989,11 +1059,11 @@ initializeWith: anAccount
 	self createSummary.! !
 
 
-!AccountSummary methodsFor: 'private' stamp: 'EP 11/14/2022 21:36:17'!
+!AccountSummaryReport methodsFor: 'private' stamp: 'EP 11/14/2022 21:36:17'!
 addATransaction: aTransaction
 	aTransaction beAddedToAReport: self.! !
 
-!AccountSummary methodsFor: 'private' stamp: 'EP 11/14/2022 21:06:55'!
+!AccountSummaryReport methodsFor: 'private' stamp: 'EP 11/14/2022 21:06:55'!
 createSummary
 	account transactions do: [:aTransaction |		 self addATransaction: aTransaction.		].
 	
@@ -1001,34 +1071,82 @@ createSummary
 ! !
 
 
-!AccountSummary methodsFor: 'public' stamp: 'EP 11/14/2022 21:47:49'!
+!AccountSummaryReport methodsFor: 'public' stamp: 'EP 11/14/2022 21:47:49'!
 reportText
 	^summary.! !
 
 
-!AccountSummary methodsFor: 'dd' stamp: 'EP 11/14/2022 21:26:25'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'EP 11/14/2022 21:26:25'!
 addADeposit: aDeposit
 	summary := summary, 'Depósito por ', aDeposit value asString, ' '.! !
 
-!AccountSummary methodsFor: 'dd' stamp: 'EP 11/14/2022 21:28:01'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'EP 11/14/2022 21:28:01'!
 addATransferDepositLeg: aTransferLeg
 	summary := summary, 'Entrada por transferencia de ', aTransferLeg value asString, ' '.! !
 
-!AccountSummary methodsFor: 'dd' stamp: 'EP 11/14/2022 21:28:15'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'EP 11/14/2022 21:28:15'!
 addATransferWithdrawLeg: aTransferLeg
 	summary := summary, 'Salida por transferencia de ', aTransferLeg value asString, ' '.! !
 
-!AccountSummary methodsFor: 'dd' stamp: 'EP 11/14/2022 21:26:57'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'EP 11/14/2022 21:26:57'!
 addAWithdraw: aWithdraw
 	summary := summary, 'Extracción por ', aWithdraw value asString, ' '.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'AccountSummary class' category: 'ServiciosFinancieros-Solucion'!
-AccountSummary class
+!classDefinition: 'AccountSummaryReport class' category: 'ServiciosFinancieros-Solucion'!
+AccountSummaryReport class
 	instanceVariableNames: ''!
 
-!AccountSummary class methodsFor: 'instance creation' stamp: 'EP 11/14/2022 21:12:26'!
+!AccountSummaryReport class methodsFor: 'instance creation' stamp: 'EP 11/14/2022 21:12:26'!
+for: anAccount
+	^self new initializeWith: anAccount. ! !
+
+
+!classDefinition: #TransferNetReport category: 'ServiciosFinancieros-Solucion'!
+Report subclass: #TransferNetReport
+	instanceVariableNames: 'netBalance'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Solucion'!
+
+!TransferNetReport methodsFor: 'as yet unclassified' stamp: 'EP 11/15/2022 21:58:20'!
+initializeWith: anAccount
+	account := anAccount.
+	netBalance := 0 * peso.! !
+
+
+!TransferNetReport methodsFor: 'dd' stamp: 'EP 11/15/2022 22:07:02'!
+addADeposit: aDeposit
+	^netBalance.! !
+
+!TransferNetReport methodsFor: 'dd' stamp: 'EP 11/15/2022 22:09:45'!
+addATransferDepositLeg: aTransferDepositLeg
+	netBalance := aTransferDepositLeg affectBalance: netBalance.! !
+
+!TransferNetReport methodsFor: 'dd' stamp: 'EP 11/15/2022 22:09:49'!
+addATransferWithdrawLeg: aTransferWithdrawLeg
+	netBalance := aTransferWithdrawLeg affectBalance: netBalance.! !
+
+!TransferNetReport methodsFor: 'dd' stamp: 'EP 11/15/2022 22:07:07'!
+addAWithdraw: aWithdraw
+	^netBalance.! !
+
+
+!TransferNetReport methodsFor: 'public' stamp: 'EP 11/15/2022 22:10:07'!
+result
+
+	account transactions do: [:aTransaction | aTransaction  beAddedToAReport: self ].
+	
+	^netBalance. ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferNetReport class' category: 'ServiciosFinancieros-Solucion'!
+TransferNetReport class
+	instanceVariableNames: ''!
+
+!TransferNetReport class methodsFor: 'instance creation' stamp: 'EP 11/15/2022 21:14:40'!
 for: anAccount
 	^self new initializeWith: anAccount. ! !
 
