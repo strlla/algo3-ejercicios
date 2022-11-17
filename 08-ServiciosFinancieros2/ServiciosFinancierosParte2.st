@@ -5,76 +5,123 @@ TestCase subclass: #AccountSummaryTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Solucion'!
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/14/2022 20:40:59'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/17/2022 11:01:20'!
 test01AccountWithNoTransactionsKnowsItsSummary
-    | anAccount |
+    | anAccount summary |
 
-    anAccount := ReceptiveAccount new.
+	anAccount := ReceptiveAccount new.
+	summary := AccountSummaryReport for: anAccount. 
 	
-    self assert: anAccount accountSummary equals: ('Balance = ', anAccount balance asString).! !
+    self assert: summary reportText equals: ('Balance = ', anAccount balance asString).! !
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/14/2022 20:40:33'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/17/2022 11:40:55'!
 test02AccountWithADepositKnowsItsSummary
-    | anAccount aDeposit |
+    | anAccount aDeposit summary|
 
-    anAccount := ReceptiveAccount new.
-    aDeposit := Deposit register: 100 * peso on: anAccount.
+	anAccount := ReceptiveAccount new.
+	aDeposit := Deposit register: 100 * peso on: anAccount.
+	summary := AccountSummaryReport for: anAccount. 
 
-    self assert: anAccount accountSummary equals: ('Depósito por ', aDeposit value asString, ' Balance = ', anAccount balance asString).! !
+    self assert: summary reportText equals: ('Depósito por ', aDeposit value asString, '
+Balance = ', anAccount balance asString).! !
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/14/2022 20:41:35'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/17/2022 11:40:59'!
 test03AccountWithAWithdrawKnowsItsSummary
-    | anAccount aWithdraw |
+    | anAccount aWithdraw summary|
 
-    anAccount := ReceptiveAccount new.
-    aWithdraw := Withdraw register: 50 * peso on: anAccount.
+	anAccount := ReceptiveAccount new.
+	aWithdraw := Withdraw register: 50 * peso on: anAccount.
+	summary := AccountSummaryReport for: anAccount. 
 
-    self assert: anAccount accountSummary equals: ('Extracción por ', aWithdraw value asString,' Balance = ', anAccount balance asString).! !
+    self assert: summary reportText equals: ('Extracción por ', aWithdraw value asString,'
+Balance = ', anAccount balance asString).! !
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/14/2022 20:43:50'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/17/2022 11:41:14'!
 test04AccountWithAWithdrawFromTransferKnowsItsSummary
-    | senderAccount receiverAccount transfer aDeposit |
+    | senderAccount receiverAccount transfer aDeposit summary|
  
-    senderAccount := ReceptiveAccount new.	
-    receiverAccount := ReceptiveAccount new.
+	senderAccount := ReceptiveAccount new.	
+	receiverAccount := ReceptiveAccount new.
 	
-    aDeposit := Deposit register: 100 * peso on: senderAccount.
+	aDeposit := Deposit register: 100 * peso on: senderAccount.
 	
-    transfer := Transfer amount: 20 * peso from: senderAccount to: receiverAccount.
+	transfer := Transfer amount: 20 * peso from: senderAccount to: receiverAccount.
 
-    self assert: senderAccount accountSummary equals: ('Depósito por ', aDeposit value asString, ' Salida por transferencia de ', transfer value asString,' Balance = ', senderAccount balance asString).! !
+	summary := AccountSummaryReport for: senderAccount. 
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/14/2022 20:44:14'!
+    self assert: summary reportText equals: ('Depósito por ', aDeposit value asString, '
+Salida por transferencia de ', transfer value asString,'
+Balance = ', senderAccount balance asString).! !
+
+!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/17/2022 11:41:20'!
 test05AccountWIthADepositFromTransferKnowsItsSummary
-    | senderAccount receiverAccount transfer |
+    | senderAccount receiverAccount transfer summary|
  
-    senderAccount := ReceptiveAccount new.	
-    receiverAccount := ReceptiveAccount new.
+	senderAccount := ReceptiveAccount new.	
+	receiverAccount := ReceptiveAccount new.
 	
-    Deposit register: 100 * peso on: senderAccount.
+	Deposit register: 100 * peso on: senderAccount.
 	
-    transfer := Transfer amount: 20 * peso from: senderAccount to: receiverAccount.
+	transfer := Transfer amount: 20 * peso from: senderAccount to: receiverAccount.
 
-    self assert: receiverAccount accountSummary equals: ('Entrada por transferencia de ', transfer value asString,' Balance = ', receiverAccount balance asString).! !
+	summary := AccountSummaryReport for: receiverAccount . 
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/14/2022 20:53:55'!
+    self assert: summary reportText equals: ('Entrada por transferencia de ', transfer value asString,'
+Balance = ', receiverAccount balance asString).! !
+
+!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/17/2022 11:41:59'!
 test06AccountWIthSeveralTransactionsKnowsItsSummary
-    | anAccount anotherAccount transfer anotherTransfer aDeposit aWithdraw |
+    | anAccount anotherAccount transfer anotherTransfer aDeposit aWithdraw summary |
  
-    anAccount := ReceptiveAccount new.	
-    anotherAccount := ReceptiveAccount new.
+	anAccount := ReceptiveAccount new.	
+	anotherAccount := ReceptiveAccount new.
 	
-    aDeposit := Deposit register: 100 * peso on: anAccount.
+	aDeposit := Deposit register: 100 * peso on: anAccount.
 
-    aWithdraw := Withdraw register: 10 * peso on: anAccount.
+	aWithdraw := Withdraw register: 10 * peso on: anAccount.
 
-    transfer := Transfer amount: 20 * peso from: anAccount to: anotherAccount.
+	transfer := Transfer amount: 20 * peso from: anAccount to: anotherAccount.
 		
-    anotherTransfer := Transfer amount: 20 * peso from: anotherAccount to: anAccount.
+	anotherTransfer := Transfer amount: 20 * peso from: anotherAccount to: anAccount.
+
+	summary := AccountSummaryReport for: anAccount.
 
 
-    self assert: anAccount accountSummary equals: 
-    ('Depósito por ', aDeposit value asString, ' Extracción por ', aWithdraw value asString, ' Salida por transferencia de ', transfer value asString, ' Entrada por transferencia de ', anotherTransfer value asString,' Balance = ', anAccount balance asString).! !
+    self assert: summary reportText equals: 
+    ('Depósito por ', aDeposit value asString, '
+Extracción por ', aWithdraw value asString, '
+Salida por transferencia de ', transfer value asString, '
+Entrada por transferencia de ', anotherTransfer value asString,'
+Balance = ', anAccount balance asString).! !
+
+!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/17/2022 11:42:33'!
+test07PortfolioWithSeveralTransactionsKnowsItsSummary
+    | anAccount anotherAccount transfer anotherTransfer aDeposit aWithdraw summary portfolio|
+ 
+	anAccount := ReceptiveAccount new.	
+	anotherAccount := ReceptiveAccount new.
+	
+	aDeposit := Deposit register: 100 * peso on: anAccount.
+
+	aWithdraw := Withdraw register: 10 * peso on: anAccount.
+
+	transfer := Transfer amount: 20 * peso from: anAccount to: anotherAccount.
+		
+	anotherTransfer := Transfer amount: 20 * peso from: anotherAccount to: anAccount.
+	
+	portfolio := Portfolio with: anAccount with: anotherAccount. 
+
+	summary := AccountSummaryReport for: portfolio.
+
+
+    self assert: summary reportText equals: 
+    ('Depósito por ', aDeposit value asString, '
+Extracción por ', aWithdraw value asString, '
+Salida por transferencia de ', transfer value asString, '
+Entrada por transferencia de ', anotherTransfer value asString,'
+Entrada por transferencia de ', transfer value asString , '
+Salida por transferencia de ', anotherTransfer value asString ,'
+Balance = ', anAccount balance asString).! !
 
 
 !classDefinition: #PortfolioTest category: 'ServiciosFinancieros-Solucion'!
@@ -564,13 +611,6 @@ Object subclass: #Account
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Solucion'!
 
-!Account methodsFor: 'main protocol' stamp: 'EP 11/15/2022 22:13:56'!
-accountSummary
-	| summary |
-	summary := AccountSummaryReport for: self.
-			
-	^summary reportText.! !
-
 !Account methodsFor: 'main protocol' stamp: 'HAW 5/25/2019 12:23:40'!
 balance
 
@@ -809,15 +849,15 @@ value
 	self subclassResponsibility ! !
 
 
-!AccountTransaction methodsFor: 'dd' stamp: 'EP 11/15/2022 22:11:53'!
-beAddedToAReport: aReport
-	self subclassResponsibility. ! !
-
-
 !AccountTransaction methodsFor: 'balance' stamp: 'HAW 5/25/2019 11:25:39'!
 affectBalance: aBalance
 
 	self subclassResponsibility ! !
+
+
+!AccountTransaction methodsFor: 'dd' stamp: 'EP 11/15/2022 22:11:53'!
+beAddedToAReport: aReport
+	self subclassResponsibility. ! !
 
 
 !classDefinition: #Deposit category: 'ServiciosFinancieros-Solucion'!
@@ -1027,22 +1067,6 @@ initializeWith: anAccount
 reportText
 	^self subclassResponsibility.! !
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'Report class' category: 'ServiciosFinancieros-Solucion'!
-Report class
-	instanceVariableNames: ''!
-
-!Report class methodsFor: 'instance creation' stamp: 'EP 11/14/2022 21:41:42'!
-ofKind: aTypeOfReport for: anAccount
-	| selectedSubclass |
-	
-	self subclasses detect: [:aSubclass | aSubclass = aTypeOfReport ]
-	ifFound:  [:aSubclass | selectedSubclass := aSubclass]
-	ifNone: [self error: 'Invalid type of report.'].
-	
-	selectedSubclass  new initializeWith: anAccount. ! !
-
 
 !classDefinition: #AccountSummaryReport category: 'ServiciosFinancieros-Solucion'!
 Report subclass: #AccountSummaryReport
@@ -1076,21 +1100,21 @@ reportText
 	^summary.! !
 
 
-!AccountSummaryReport methodsFor: 'dd' stamp: 'EP 11/14/2022 21:26:25'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'MN 11/17/2022 11:39:58'!
 addADeposit: aDeposit
-	summary := summary, 'Depósito por ', aDeposit value asString, ' '.! !
+	summary := summary, 'Depósito por ', aDeposit value asString, Character newLineCharacter asString.! !
 
-!AccountSummaryReport methodsFor: 'dd' stamp: 'EP 11/14/2022 21:28:01'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'MN 11/17/2022 11:40:07'!
 addATransferDepositLeg: aTransferLeg
-	summary := summary, 'Entrada por transferencia de ', aTransferLeg value asString, ' '.! !
+	summary := summary, 'Entrada por transferencia de ', aTransferLeg value asString, Character newLineCharacter asString.! !
 
-!AccountSummaryReport methodsFor: 'dd' stamp: 'EP 11/14/2022 21:28:15'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'MN 11/17/2022 11:40:13'!
 addATransferWithdrawLeg: aTransferLeg
-	summary := summary, 'Salida por transferencia de ', aTransferLeg value asString, ' '.! !
+	summary := summary, 'Salida por transferencia de ', aTransferLeg value asString, Character newLineCharacter asString.! !
 
-!AccountSummaryReport methodsFor: 'dd' stamp: 'EP 11/14/2022 21:26:57'!
+!AccountSummaryReport methodsFor: 'dd' stamp: 'MN 11/17/2022 11:40:19'!
 addAWithdraw: aWithdraw
-	summary := summary, 'Extracción por ', aWithdraw value asString, ' '.! !
+	summary := summary, 'Extracción por ', aWithdraw value asString, Character newLineCharacter asString.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
