@@ -131,12 +131,12 @@ TestCase subclass: #PortfolioDetailedTreePrinterTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Solucion'!
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/17/2022 21:30:13'!
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 00:40:36'!
 test01PortfolioWithoutAccountsPrintsItself
 	| portfolio tree |
 	
 	portfolio := Portfolio named: 'Portfolio aislado'.
-	tree := PortfolioTreeDetailedPrinter for: portfolio. 
+	tree := PortfolioDetailedTreePrinter for: portfolio. 
 	
 	
 	self assert: tree reportText equals: 'Portfolio aislado
@@ -144,14 +144,14 @@ test01PortfolioWithoutAccountsPrintsItself
 	
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/17/2022 21:29:02'!
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 00:40:36'!
 test02PortfolioWithTransactionsPrintsCorrectly
 	| portfolio tree account deposit |
 	
 	account := ReceptiveAccount named: 'Cuenta de Alan'.
 	deposit := Deposit register: 100 * peso on: account.
 	portfolio := Portfolio named: 'Portfolio con hijo' with: account.
-	tree := PortfolioTreeDetailedPrinter for: portfolio. 
+	tree := PortfolioDetailedTreePrinter for: portfolio. 
 
 	self assert: tree reportText equals: 'Portfolio con hijo
 	Cuenta de Alan
@@ -161,7 +161,7 @@ test02PortfolioWithTransactionsPrintsCorrectly
 	
 	! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/17/2022 21:37:21'!
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 00:40:36'!
 test03PortfolioWithManyAccountsPrintsCorrectly
 	| portfolio  johnsAccount angiesAccount aDeposit anotherDeposit tree |
 	
@@ -172,7 +172,7 @@ test03PortfolioWithManyAccountsPrintsCorrectly
 	aDeposit := Deposit register: 100 * peso on: johnsAccount.
 	anotherDeposit := Deposit register: 100 * peso on: angiesAccount.
 
-	tree := PortfolioTreeDetailedPrinter for: portfolio. 
+	tree := PortfolioDetailedTreePrinter for: portfolio. 
 
 	self assert: tree reportText equals: 'Portfolio de hijos
 	Cuenta de Juan
@@ -183,7 +183,7 @@ test03PortfolioWithManyAccountsPrintsCorrectly
 		Balance = ', (angiesAccount balance) asString, '
 	Balance = ', (portfolio balance) asString. ! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/17/2022 21:45:58'!
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 00:49:27'!
 test04PortfolioWithManyPortfoliosPrintsCorrectly
 	| familyPortfolio childrenPortfolio  johnsAccount angiesAccount myAccount aDeposit anotherDeposit tree |
 	
@@ -195,7 +195,7 @@ test04PortfolioWithManyPortfoliosPrintsCorrectly
 	aDeposit := Deposit register: 100 * peso on: johnsAccount.
 	anotherDeposit := Deposit register: 100 * peso on: angiesAccount.
 
-	tree := PortfolioTreeDetailedPrinter for: familyPortfolio. 
+	tree := PortfolioDetailedTreePrinter for: familyPortfolio. 
 
 	self assert: tree reportText equals: 'Portfolio de la familia
 	Cuenta mia
@@ -208,7 +208,10 @@ test04PortfolioWithManyPortfoliosPrintsCorrectly
 			Depósito por ', (anotherDeposit value) asString, '
 			Balance = ', (angiesAccount balance) asString,'
 		Balance = ', (childrenPortfolio balance) asString, '
-	Balance = ', (familyPortfolio balance) asString. ! !
+	Balance = ', (familyPortfolio balance) asString. 
+	
+	
+	! !
 
 
 !classDefinition: #PortfolioTest category: 'ServiciosFinancieros-Solucion'!
@@ -1279,83 +1282,89 @@ register: aValue on: account
 	^ transaction! !
 
 
-!classDefinition: #PortfolioTreeDetailedPrinter category: 'ServiciosFinancieros-Solucion'!
-Object subclass: #PortfolioTreeDetailedPrinter
+!classDefinition: #PortfolioDetailedTreePrinter category: 'ServiciosFinancieros-Solucion'!
+Object subclass: #PortfolioDetailedTreePrinter
 	instanceVariableNames: 'portfolio'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Solucion'!
 
-!PortfolioTreeDetailedPrinter methodsFor: 'dd' stamp: 'EP 11/17/2022 21:13:32'!
+!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'EP 11/17/2022 21:13:32'!
 addADeposit: aDeposit
 	^'Depósito por ', (aDeposit value) asString, Character newLineCharacter asString.! !
 
-!PortfolioTreeDetailedPrinter methodsFor: 'dd' stamp: 'EP 11/17/2022 21:12:32'!
+!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'EP 11/17/2022 21:12:32'!
 addATransferDepositLeg: aTransferLeg
 	^'Entrada por transferencia de ', (aTransferLeg value) asString, Character newLineCharacter asString.! !
 
-!PortfolioTreeDetailedPrinter methodsFor: 'dd' stamp: 'EP 11/17/2022 21:12:39'!
+!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'EP 11/17/2022 21:12:39'!
 addATransferWithdrawLeg: aTransferLeg
 	^'Salida por transferencia de ', (aTransferLeg value) asString, Character newLineCharacter asString.! !
 
-!PortfolioTreeDetailedPrinter methodsFor: 'dd' stamp: 'EP 11/17/2022 21:12:45'!
+!PortfolioDetailedTreePrinter methodsFor: 'dd' stamp: 'EP 11/17/2022 21:12:45'!
 addAWithdraw: aWithdraw
 	^'Extracción por ', (aWithdraw value) asString, Character newLineCharacter asString.! !
 
 
-!PortfolioTreeDetailedPrinter methodsFor: 'as yet unclassified' stamp: 'EP 11/17/2022 21:28:42'!
+!PortfolioDetailedTreePrinter methodsFor: 'initialization' stamp: 'EP 11/17/2022 20:23:09'!
+initializeWith: aPortfolio
+	portfolio := aPortfolio. ! !
+
+
+!PortfolioDetailedTreePrinter methodsFor: 'main protocol' stamp: 'MN 11/18/2022 00:56:30'!
+reportText
+	| text |
+	
+	text :=self printChildrenOfPortfolio: portfolio withIndentations: 0.
+	
+	^text.! !
+
+
+!PortfolioDetailedTreePrinter methodsFor: 'private' stamp: 'MN 11/18/2022 01:12:09'!
 accountSummaryOf: anAccount withIndentations: aQuantity
 	| text |
 	
 	text := ''.
+	text := text, '	', anAccount name.
+	text := text, Character newLineCharacter asString, '	'.
+	aQuantity timesRepeat: [text := text, '	'].
+		
 				
 	anAccount transactions do: [:aTransaction | 
-			aQuantity - 1 timesRepeat: [text := text, '	'].
-			text := text, (aTransaction beAddedToAReport: self) .
-		]. 
-	aQuantity timesRepeat: [text := text, '	'].
-	text := text, 'Balance = ', anAccount balance asString, Character newLineCharacter asString.
+		
+		text := text, (aTransaction beAddedToAReport: self) .
+		aQuantity+1 timesRepeat: [text := text, '	'].
+	]. 
+	text := text, 'Balance = ', anAccount balance asString.
 	^text.! !
 
-!PortfolioTreeDetailedPrinter methodsFor: 'as yet unclassified' stamp: 'EP 11/17/2022 20:23:09'!
-initializeWith: aPortfolio
-	portfolio := aPortfolio. ! !
-
-!PortfolioTreeDetailedPrinter methodsFor: 'as yet unclassified' stamp: 'EP 11/17/2022 21:52:26'!
+!PortfolioDetailedTreePrinter methodsFor: 'private' stamp: 'MN 11/18/2022 01:18:09'!
 printChildrenOfPortfolio: aPortfolio withIndentations: aQuantity
 	| text |
-	
-	text := aPortfolio name, Character newLineCharacter asString. 
+	text := ''.
+	aQuantity timesRepeat: [text := text, '	'.].
+	text := text, aPortfolio name, Character newLineCharacter asString. 
 
 	aPortfolio accounts do: [:anAccount | 
-		text := text, '	', anAccount name.
-		text := text, Character newLineCharacter asString, '	'.
+		aQuantity timesRepeat: [text := text, '	'.].
 		(anAccount isKindOf: ReceptiveAccount) ifTrue: [text := text, (self accountSummaryOf: anAccount withIndentations: aQuantity + 1)].
 	 
-		(anAccount isKindOf: Portfolio) ifTrue: [text := text, (self printChildrenOfPortfolio: aPortfolio withIndentations: aQuantity + 1)]].
-	
+		(anAccount isKindOf: Portfolio) ifTrue: [text := text, (self printChildrenOfPortfolio: anAccount withIndentations: aQuantity + 1)].
+		
+		text := text, Character newLineCharacter asString.
+		].
+	aQuantity timesRepeat: [text := text, '	'.].
 	text := text, '	Balance = ', (aPortfolio balance) asString.
-	
-	^text.! !
-
-!PortfolioTreeDetailedPrinter methodsFor: 'as yet unclassified' stamp: 'EP 11/17/2022 21:53:57'!
-reportText
-	| text |
-	
-	text := portfolio name, Character newLineCharacter asString. 
-	text := text, (self printChildrenOfPortfolio: portfolio withIndentations: 1). 
-
-	text := text, '	Balance = ', (portfolio balance) asString.
 	
 	^text.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'PortfolioTreeDetailedPrinter class' category: 'ServiciosFinancieros-Solucion'!
-PortfolioTreeDetailedPrinter class
+!classDefinition: 'PortfolioDetailedTreePrinter class' category: 'ServiciosFinancieros-Solucion'!
+PortfolioDetailedTreePrinter class
 	instanceVariableNames: ''!
 
-!PortfolioTreeDetailedPrinter class methodsFor: 'as yet unclassified' stamp: 'EP 11/17/2022 20:22:34'!
+!PortfolioDetailedTreePrinter class methodsFor: 'as yet unclassified' stamp: 'EP 11/17/2022 20:22:34'!
 for: aPortfolio 
 	^self new initializeWith: aPortfolio.! !
 
@@ -1367,7 +1376,7 @@ Object subclass: #PortfolioTreePrinter
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Solucion'!
 
-!PortfolioTreePrinter methodsFor: 'public' stamp: 'EP 11/17/2022 20:05:27'!
+!PortfolioTreePrinter methodsFor: 'private' stamp: 'EP 11/17/2022 20:05:27'!
 printChildrenOfPortfolio: aPortfolio WithIndentations: aQuantity
 	| text |
 	
@@ -1383,6 +1392,7 @@ printChildrenOfPortfolio: aPortfolio WithIndentations: aQuantity
 	].
 	
 	^text.! !
+
 
 !PortfolioTreePrinter methodsFor: 'public' stamp: 'EP 11/17/2022 20:04:20'!
 reportText
