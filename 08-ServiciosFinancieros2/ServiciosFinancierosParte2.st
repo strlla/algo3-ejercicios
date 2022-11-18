@@ -14,7 +14,7 @@ test01AccountWithNoTransactionsKnowsItsSummary
     self assert: summary reportText equals:
  ('Balance = ', account balance asString).! !
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/18/2022 02:35:42'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/18/2022 14:25:53'!
 test02AccountWithADepositKnowsItsSummary
     | aDeposit|
 
@@ -26,7 +26,7 @@ test02AccountWithADepositKnowsItsSummary
 ('Depósito por ', aDeposit value asString, '
 Balance = ', account balance asString).! !
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/18/2022 02:35:38'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/18/2022 14:26:01'!
 test03AccountWithAWithdrawKnowsItsSummary
     |aWithdraw|
 
@@ -38,7 +38,7 @@ test03AccountWithAWithdrawKnowsItsSummary
  ('Extracción por ', aWithdraw value asString,'
 Balance = ', account balance asString).! !
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/18/2022 02:34:38'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/18/2022 14:26:09'!
 test04AccountWithAWithdrawFromTransferKnowsItsSummary
     | senderAccount receiverAccount transfer aDeposit |
  
@@ -56,7 +56,7 @@ test04AccountWithAWithdrawFromTransferKnowsItsSummary
 Salida por transferencia de ', transfer value asString,'
 Balance = ', senderAccount balance asString).! !
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/18/2022 02:35:22'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/18/2022 14:26:15'!
 test05AccountWIthADepositFromTransferKnowsItsSummary
     | senderAccount receiverAccount transfer |
  
@@ -73,7 +73,7 @@ test05AccountWIthADepositFromTransferKnowsItsSummary
 ('Entrada por transferencia de ', transfer value asString,'
 Balance = ', receiverAccount balance asString).! !
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/18/2022 02:34:38'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/18/2022 14:26:28'!
 test06AccountWIthSeveralTransactionsKnowsItsSummary
     | anAccount anotherAccount transfer anotherTransfer aDeposit aWithdraw |
  
@@ -98,7 +98,7 @@ Salida por transferencia de ', transfer value asString, '
 Entrada por transferencia de ', anotherTransfer value asString,'
 Balance = ', anAccount balance asString).! !
 
-!AccountSummaryTest methodsFor: 'test' stamp: 'MN 11/18/2022 02:34:38'!
+!AccountSummaryTest methodsFor: 'test' stamp: 'EP 11/18/2022 14:26:39'!
 test07PortfolioWithSeveralTransactionsKnowsItsSummary
     | anAccount anotherAccount transfer anotherTransfer aDeposit aWithdraw portfolio|
  
@@ -135,58 +135,18 @@ TestCase subclass: #PortfolioDetailedTreePrinterTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancierosParte2'!
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 03:17:33'!
-setUpOftreeOfPortfolioWithTransactions
-	| portfolio johnsAccount |
-	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'.
-	Deposit register: 100 * peso on: johnsAccount.
-	portfolio := Portfolio named: 'Portfolio con hijo' with: johnsAccount.
-	tree := PortfolioDetailedTreePrinter for: portfolio. 
-	! !
-
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 03:18:37'!
-setUpPortfolioWithManyAccounts
-	| portfolio johnsAccount angiesAccount |
-	
-	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
-	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'. 
-	
-	portfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount with: angiesAccount. 	
-	Deposit register: 100 * peso on: johnsAccount.
-	Deposit register: 100 * peso on: angiesAccount.
-
-	tree := PortfolioDetailedTreePrinter for: portfolio. 
-! !
-
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 03:00:53'!
-setUpTreeOfFamilyPortfolio
-
-| familyPortfolio childrenPortfolio  johnsAccount angiesAccount myAccount aDeposit anotherDeposit |
-	
-	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
-	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'. 
-	childrenPortfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount with: angiesAccount. 
-	myAccount := ReceptiveAccount named: 'Cuenta mia'. 
-	familyPortfolio := Portfolio named: 'Portfolio de la familia' with: myAccount with: childrenPortfolio.
-	aDeposit := Deposit register: 100 * peso on: johnsAccount.
-	anotherDeposit := Deposit register: 100 * peso on: angiesAccount.
-
-	tree := PortfolioDetailedTreePrinter for: familyPortfolio. ! !
-
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 03:20:04'!
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/18/2022 16:48:48'!
 test01PortfolioWithoutAccountsPrintsItself
 	| portfolio |
 	
 	portfolio := Portfolio named: 'Portfolio aislado'.
 	tree := PortfolioDetailedTreePrinter for: portfolio. 
-	
+
 	self assert: tree reportText equals: 
 	'Portfolio aislado
-	Balance = ', (portfolio balance) asString. 
-	
-	! !
+	Balance = ', (portfolio balance) asString.! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 03:17:52'!
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/18/2022 14:23:25'!
 test02PortfolioWithTransactionsPrintsCorrectly
 	self setUpOftreeOfPortfolioWithTransactions.
 
@@ -196,10 +156,9 @@ test02PortfolioWithTransactionsPrintsCorrectly
 		Depósito por 100 * pesos
 		Balance = 100 * pesos
 	Balance = 100 * pesos'. 
-	
-	! !
+! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 03:19:53'!
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/18/2022 14:23:33'!
 test03PortfolioWithManyAccountsPrintsCorrectly
 	self setUpPortfolioWithManyAccounts. 
 
@@ -213,7 +172,7 @@ test03PortfolioWithManyAccountsPrintsCorrectly
 		Balance = 100 * pesos
 	Balance = 200 * pesos'! !
 
-!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'MN 11/18/2022 03:07:53'!
+!PortfolioDetailedTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/18/2022 14:22:50'!
 test04PortfolioWithManyPortfoliosPrintsCorrectly
 	self setUpTreeOfFamilyPortfolio.
 
@@ -229,10 +188,46 @@ test04PortfolioWithManyPortfoliosPrintsCorrectly
 			Depósito por 100 * pesos
 			Balance = 100 * pesos
 		Balance = 200 * pesos
-	Balance = 200 * pesos'. 
-	
-	
+	Balance = 200 * pesos'. ! !
+
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'setUp' stamp: 'MN 11/18/2022 03:17:33'!
+setUpOftreeOfPortfolioWithTransactions
+	| portfolio johnsAccount |
+	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'.
+	Deposit register: 100 * peso on: johnsAccount.
+	portfolio := Portfolio named: 'Portfolio con hijo' with: johnsAccount.
+	tree := PortfolioDetailedTreePrinter for: portfolio. 
 	! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'setUp' stamp: 'MN 11/18/2022 03:18:37'!
+setUpPortfolioWithManyAccounts
+	| portfolio johnsAccount angiesAccount |
+	
+	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
+	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'. 
+	
+	portfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount with: angiesAccount. 	
+	Deposit register: 100 * peso on: johnsAccount.
+	Deposit register: 100 * peso on: angiesAccount.
+
+	tree := PortfolioDetailedTreePrinter for: portfolio. 
+! !
+
+!PortfolioDetailedTreePrinterTest methodsFor: 'setUp' stamp: 'MN 11/18/2022 03:00:53'!
+setUpTreeOfFamilyPortfolio
+
+| familyPortfolio childrenPortfolio  johnsAccount angiesAccount myAccount aDeposit anotherDeposit |
+	
+	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
+	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'. 
+	childrenPortfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount with: angiesAccount. 
+	myAccount := ReceptiveAccount named: 'Cuenta mia'. 
+	familyPortfolio := Portfolio named: 'Portfolio de la familia' with: myAccount with: childrenPortfolio.
+	aDeposit := Deposit register: 100 * peso on: johnsAccount.
+	anotherDeposit := Deposit register: 100 * peso on: angiesAccount.
+
+	tree := PortfolioDetailedTreePrinter for: familyPortfolio. ! !
 
 
 !classDefinition: #PortfolioTest category: 'ServiciosFinancierosParte2'!
@@ -452,63 +447,45 @@ test15PortfolioCanNotIncludeAnyOfTheComposedAccountOfPortfolioToAdd
 
 !classDefinition: #PortfolioTreePrinterTest category: 'ServiciosFinancierosParte2'!
 TestCase subclass: #PortfolioTreePrinterTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'tree'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancierosParte2'!
 
-!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/17/2022 17:37:50'!
+!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/18/2022 15:44:12'!
 test01PortfolioWithNoMembersIsAloneInTree
-	| portfolio tree |
+	| portfolio |
 	
 	portfolio := Portfolio named: 'Portfolio aislado'.
 	tree := PortfolioTreePrinter for: portfolio. 
 	
-	
 	self assert: tree reportText equals: 'Portfolio aislado'. ! !
 
-!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/17/2022 17:57:31'!
+!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/18/2022 15:44:12'!
 test02PortfolioWithAnAccountPrintsCorrectly
-	| portfolio tree account |
+	| portfolio account |
 	
 	account := ReceptiveAccount named: 'Cuenta de Alan'. 
 	portfolio := Portfolio named: 'Portfolio con hijos' with: account. 
-	tree := PortfolioTreePrinter for: portfolio. 
+	tree := PortfolioTreePrinter for: portfolio.
 
 	self assert: tree reportText equals: 'Portfolio con hijos
 	Cuenta de Alan'. ! !
 
-!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/17/2022 20:08:39'!
+!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/18/2022 15:44:11'!
 test03FamilyPortfolioPrintsCorrectly
-	| tree johnsAccount angiesAccount  childrenPortfolio myAccount familyPortfolio |
 	
-	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
-	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'. 
-	childrenPortfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount with: angiesAccount. 
-	myAccount := ReceptiveAccount named: 'Cuenta mia'. 
-	familyPortfolio := Portfolio named: 'Portfolio de la familia' with: myAccount with: childrenPortfolio.
-		
-	tree := PortfolioTreePrinter for: familyPortfolio. 
-	
+	self setUpFamilyPortfolioPrintsCorrectly. 
+
 	self assert: tree reportText equals: 'Portfolio de la familia
 	Cuenta mia
 	Portfolio de hijos
 		Cuenta de Juan
 		Cuenta de Angeles'. ! !
 
-!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/17/2022 20:09:40'!
+!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/18/2022 15:44:12'!
 test04FamilyPortfolioWithManyGenerationsPrintsCorrectly
-	| tree johnsAccount angiesAccount  childrenPortfolio myAccount familyPortfolio anotherPortfolio |
-	
-	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
-	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'. 
-	childrenPortfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount with: angiesAccount. 
-	myAccount := ReceptiveAccount named: 'Cuenta mia'. 
-	familyPortfolio := Portfolio named: 'Portfolio de la familia' with: myAccount with: childrenPortfolio.
-	
-	anotherPortfolio := Portfolio named: 'Otro portfolio' with: familyPortfolio.
-	
-	tree := PortfolioTreePrinter for: anotherPortfolio. 
+	self setUpFamilyPortfolioWithManyGenerationsPrintsCorrectly.
 	
 	self assert: tree reportText equals: 'Otro portfolio
 	Portfolio de la familia
@@ -517,18 +494,9 @@ test04FamilyPortfolioWithManyGenerationsPrintsCorrectly
 			Cuenta de Juan
 			Cuenta de Angeles'. ! !
 
-!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/17/2022 20:20:10'!
+!PortfolioTreePrinterTest methodsFor: 'tests' stamp: 'EP 11/18/2022 15:44:11'!
 test05FamilyPortfolioPrintsCorrectly
-	| tree johnsAccount angiesAccount  childrenPortfolio myAccount familyPortfolio secondChildrenPortfolio |
-	
-	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
-	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'.
-	secondChildrenPortfolio := Portfolio named: 'Segundo portfolio de hijos' with: angiesAccount . 
-	childrenPortfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount.
-	myAccount := ReceptiveAccount named: 'Cuenta mia'. 
-	familyPortfolio := Portfolio named: 'Portfolio de la familia' with: myAccount with: childrenPortfolio.
-	familyPortfolio add: secondChildrenPortfolio.
-	tree := PortfolioTreePrinter for: familyPortfolio. 
+	self setUpFamilyWithManyMembersPortfolioPrintsCorrectly.
 	
 	self assert: tree reportText equals: 'Portfolio de la familia
 	Cuenta mia
@@ -536,6 +504,50 @@ test05FamilyPortfolioPrintsCorrectly
 		Cuenta de Juan
 	Segundo portfolio de hijos
 		Cuenta de Angeles'. ! !
+
+
+!PortfolioTreePrinterTest methodsFor: 'setUp' stamp: 'EP 11/18/2022 15:44:11'!
+setUpFamilyPortfolioPrintsCorrectly
+	| johnsAccount angiesAccount  childrenPortfolio myAccount familyPortfolio |
+	
+	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
+	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'. 
+	childrenPortfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount with: angiesAccount. 
+	myAccount := ReceptiveAccount named: 'Cuenta mia'. 
+	familyPortfolio := Portfolio named: 'Portfolio de la familia' with: myAccount with: childrenPortfolio.
+		
+	tree := PortfolioTreePrinter for: familyPortfolio. ! !
+
+!PortfolioTreePrinterTest methodsFor: 'setUp' stamp: 'EP 11/18/2022 15:44:12'!
+setUpFamilyPortfolioWithManyGenerationsPrintsCorrectly
+
+	| johnsAccount angiesAccount  childrenPortfolio myAccount familyPortfolio anotherPortfolio |
+	
+	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
+	
+	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'. 
+	
+	childrenPortfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount with: angiesAccount. 
+	
+	myAccount := ReceptiveAccount named: 'Cuenta mia'. 
+	
+	familyPortfolio := Portfolio named: 'Portfolio de la familia' with: myAccount with: childrenPortfolio.
+	
+	anotherPortfolio := Portfolio named: 'Otro portfolio' with: familyPortfolio.
+	
+	tree := PortfolioTreePrinter for: anotherPortfolio. ! !
+
+!PortfolioTreePrinterTest methodsFor: 'setUp' stamp: 'EP 11/18/2022 15:44:12'!
+setUpFamilyWithManyMembersPortfolioPrintsCorrectly
+	| johnsAccount angiesAccount  childrenPortfolio myAccount familyPortfolio secondChildrenPortfolio |
+	johnsAccount := ReceptiveAccount named: 'Cuenta de Juan'. 
+	angiesAccount := ReceptiveAccount named: 'Cuenta de Angeles'.
+	secondChildrenPortfolio := Portfolio named: 'Segundo portfolio de hijos' with: angiesAccount . 
+	childrenPortfolio := Portfolio named: 'Portfolio de hijos' with: johnsAccount.
+	myAccount := ReceptiveAccount named: 'Cuenta mia'. 
+	familyPortfolio := Portfolio named: 'Portfolio de la familia' with: myAccount with: childrenPortfolio.
+	familyPortfolio add: secondChildrenPortfolio.
+	tree := PortfolioTreePrinter for: familyPortfolio. ! !
 
 
 !classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancierosParte2'!
@@ -1432,18 +1444,13 @@ reportText
 	^text.! !
 
 
-!PortfolioDetailedTreePrinter methodsFor: 'private' stamp: 'MN 11/18/2022 01:12:09'!
+!PortfolioDetailedTreePrinter methodsFor: 'private' stamp: 'EP 11/18/2022 16:46:26'!
 accountSummaryOf: anAccount withIndentations: aQuantity
 	| text |
 	
-	text := ''.
-	text := text, '	', anAccount name.
-	text := text, Character newLineCharacter asString, '	'.
+	text := '', '	', anAccount name, Character newLineCharacter asString, '	'.
 	aQuantity timesRepeat: [text := text, '	'].
-		
-				
 	anAccount transactions do: [:aTransaction | 
-		
 		text := text, (aTransaction beAddedToAReport: self) .
 		aQuantity+1 timesRepeat: [text := text, '	'].
 	]. 
@@ -1488,18 +1495,17 @@ Report subclass: #PortfolioTreePrinter
 	poolDictionaries: ''
 	category: 'ServiciosFinancierosParte2'!
 
-!PortfolioTreePrinter methodsFor: 'private' stamp: 'MN 11/18/2022 02:50:21'!
+!PortfolioTreePrinter methodsFor: 'private' stamp: 'EP 11/18/2022 16:47:30'!
 addChildrenOfPortfolio: aPortfolio WithIndentations: aQuantity
 
 	aPortfolio accounts do: [:anAccount | 
 		self addToTheReportTheAccount: anAccount withTheIndentation: aQuantity.
 		
 		(anAccount isKindOf: Portfolio) ifTrue: [self addChildrenOfPortfolio: anAccount WithIndentations: aQuantity + 1].
-
 	].
 	! !
 
-!PortfolioTreePrinter methodsFor: 'private' stamp: 'MN 11/18/2022 02:43:59'!
+!PortfolioTreePrinter methodsFor: 'private' stamp: 'EP 11/18/2022 16:47:16'!
 addToTheReportTheAccount: anAccount withTheIndentation: aQuantity
 
 	treeText := treeText, Character newLineCharacter asString.
@@ -1540,7 +1546,7 @@ Report subclass: #TransferNetReport
 	poolDictionaries: ''
 	category: 'ServiciosFinancierosParte2'!
 
-!TransferNetReport methodsFor: 'as yet unclassified' stamp: 'EP 11/15/2022 21:58:20'!
+!TransferNetReport methodsFor: 'initialization' stamp: 'EP 11/15/2022 21:58:20'!
 initializeWith: anAccount
 	account := anAccount.
 	netBalance := 0 * peso.! !
